@@ -1,0 +1,139 @@
+{
+  "cpu": {
+    "name": "Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz",
+    "vendor": "Intel",
+    "cores": 2,
+    "threads": 4,
+    "sockets": 1,
+    "base_clock_ghz": 3.0,
+    "min_clock_ghz": 0.4,
+    "virtualization": "VT-x",
+    "flags": [
+      "aes",
+      "avx",
+      "avx2",
+      "smap",
+      "smep",
+      "vmx"
+    ],
+    "codename": "Skylake",
+    "microarch": "skylake",
+    "generation": 6,
+    "amd_zen": null,
+    "macos_support": "dropped",
+    "has_igpu": true
+  },
+  "gpu": [
+    {
+      "name": "Skylake-U GT2 [HD Graphics 520]",
+      "vendor": "Intel Corporation",
+      "pci_id": "8086:1916",
+      "class": "VGA compatible controller",
+      "slot": "00:02.0",
+      "kext": "WhateverGreen.kext",
+      "macos_support": "dropped",
+      "needs_patch": null,
+      "gpu_gen": "Skylake GT2",
+      "needs_agdp_patch": null
+    }
+  ],
+  "audio": {
+    "codec": "Realtek ALC3235",
+    "codec_id": "10ec:0293",
+    "source": "/proc/asound/card*/codec#0",
+    "layout_id": 28,
+    "kext": "AppleALC.kext"
+  },
+  "ethernet": [
+    {
+      "name": "Ethernet Connection I219-LM",
+      "vendor": "Intel Corporation",
+      "pci_id": "8086:156f",
+      "slot": "00:1f.6",
+      "kext": "IntelMausi.kext",
+      "macos_support": "full",
+      "needs_patch": false
+    }
+  ],
+  "usb_controllers": [
+    {
+      "name": "Sunrise Point-LP USB 3.0 xHCI Controller",
+      "vendor": "Intel Corporation",
+      "pci_id": "8086:9d2f",
+      "slot": "00:14.0",
+      "needs_usb_map": true
+    }
+  ],
+  "wireless": {
+    "wifi_chip": "Wireless 8260",
+    "wifi_pci_id": "8086:24f3",
+    "wifi_vendor": "Intel Corporation",
+    "bluetooth_chip": null,
+    "bt_usb_id": null,
+    "airdrop_support": false
+  },
+  "motherboard": {
+    "vendor": "Dell Inc.",
+    "model": "0VHKV0",
+    "product_name": "Latitude E5470",
+    "chipset": "Sunrise",
+    "bios_version": "1.34.3",
+    "bios_vendor": "Dell Inc.",
+    "bios_date": "11/20/2022",
+    "chassis_type": "laptop",
+    "has_ec": true
+  },
+  "storage": [
+    {
+      "name": "SanDisk X400 M.2 2280 256GB",
+      "device": "/dev/sda",
+      "size_gb": 238,
+      "type": "SATA",
+      "rotational": false,
+      "transport": "sata",
+      "vendor": "ATA     "
+    }
+  ],
+  "memory": {
+    "total_gb": 7,
+    "type": null,
+    "speed_mhz": null,
+    "slots_used": null
+  },
+  "input_devices": {
+    "keyboard_bus": "USB",
+    "mouse_bus": "USB",
+    "ps2_present": true,
+    "note": "PS/2 presence requires VoodooPS2.kext"
+  },
+  "nvram": {
+    "native_nvram": null,
+    "use_emulated": true,
+    "note": "Phase 2 refines this from CPU/chipset generation"
+  },
+  "display_ports": {
+    "hdmi": null,
+    "displayport": null,
+    "igpu_headless": false,
+    "imessage_ready": false
+  },
+  "smbios_hint": null,
+  "scan_metadata": {
+    "host_os": "Linux",
+    "host_release": "#22-Ubuntu SMP PREEMPT_DYNAMIC Mon May 25 15:54:34 UTC 2026",
+    "host_machine": "x86_64",
+    "scanner_version": "1.0.0-phase1",
+    "timestamp": "2026-06-20T20:55:41Z",
+    "used_root": false,
+    "tool_versions": {},
+    "warning_count": 1
+  },
+  "warnings": [
+    {
+      "field": "memory",
+      "message": "Memory type/speed/slots need dmidecode (requires root). Re-run as root or with passwordless sudo for full details.",
+      "severity": "warn",
+      "needs_root": true
+    }
+  ]
+}

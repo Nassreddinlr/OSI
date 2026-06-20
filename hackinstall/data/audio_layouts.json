@@ -1,0 +1,31 @@
+{
+  "_comment": "HDA audio codec → AppleALC layout-id lookup. Keyed by the Realtek codec ID (vendor:device hex, lowercase). codec_id is normalized from the 'Vendor Id' line of /proc/asound/cardX/codec#0 (e.g. 0x10ec0293 → '10ec:0293'). layout_id values come from the AppleALC PinConfigs.kext. Where multiple layouts work, the first is the most commonly recommended for desktop rear I/O.",
+  "_version": "1.0.0",
+  "layouts": {
+    "10ec:0900": { "codec": "ALC282/ALC290",       "layout_id": 3 },
+    "10ec:0292": { "codec": "ALC3235/ALC292",      "layout_id": 3 },
+    "10ec:0293": { "codec": "ALC3235/ALC293",      "layout_id": 28 },
+    "10ec:0294": { "codec": "ALC294",              "layout_id": 11 },
+    "10ec:0295": { "codec": "ALC295",              "layout_id": 13 },
+    "10ec:0298": { "codec": "ALC298",              "layout_id": 3 },
+    "10ec:0236": { "codec": "ALC236",              "layout_id": 54 },
+    "10ec:0256": { "codec": "ALC256",              "layout_id": 11 },
+    "10ec:0235": { "codec": "ALC235",              "layout_id": 3 },
+    "10ec:0285": { "codec": "ALC285",              "layout_id": 3 },
+    "10ec:0299": { "codec": "ALC299",              "layout_id": 12 },
+    "10ec:0300": { "codec": "ALC282/ALC280",       "layout_id": 3 },
+    "10ec:0867": { "codec": "ALC891",              "layout_id": 5 },
+    "10ec:0887": { "codec": "ALC887",              "layout_id": 5 },
+    "10ec:0888": { "codec": "ALC888",              "layout_id": 1 },
+    "10ec:0889": { "codec": "ALC889",              "layout_id": 5 },
+    "10ec:0892": { "codec": "ALC892",              "layout_id": 1 },
+    "10ec:0897": { "codec": "ALC897",              "layout_id": 1 },
+    "10ec:0899": { "codec": "ALC899",              "layout_id": 1 },
+    "10ec:1168": { "codec": "ALC1220",             "layout_id": 1 },
+    "10ec:1220": { "codec": "ALC1220",             "layout_id": 1 },
+    "10ec:1221": { "codec": "ALC1220 (Alt)",       "layout_id": 7 },
+    "10ec:0000": { "codec": "ALC4080/ALC1220",     "layout_id": 11 },
+    "1106:4393":  { "codec": "VIA VT2021",         "layout_id": 5 },
+    "1102:000b":  { "codec": "Creative CA0132",    "layout_id": 2 }
+  }
+}

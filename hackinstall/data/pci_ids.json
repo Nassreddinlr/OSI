@@ -1,0 +1,76 @@
+{
+  "_comment": "Hackintosh-relevant PCI device database. Keyed by 'vendor:device' hex (lowercase, no 0x). Curated from the Dortania support matrix + Acidanthera kext docs. NOT the full 40k-line pci.ids — only devices that matter for macOS config generation. Unknown PCI IDs fall through to a generic vendor-only lookup.",
+  "_version": "1.0.0",
+  "vendors": {
+    "8086": "Intel",
+    "1002": "AMD",
+    "10de": "Nvidia",
+    "10ec": "Realtek",
+    "14e4": "Broadcom",
+    "168c": "Qualcomm Atheros",
+    "8086": "Intel",
+    "1969": "Qualcomm Atheros",
+    "14c3": "MediaTek",
+    "11ab": "Marvell",
+    "10df": "Emulex",
+    "1137": "Cisco"
+  },
+  "devices": {
+    "8086:156f": { "name": "Intel Ethernet Connection I219-LM", "category": "ethernet", "kext": "IntelMausi.kext", "macos_support": "full", "needs_patch": false },
+    "8086:15b7": { "name": "Intel Ethernet Connection I219-V",  "category": "ethernet", "kext": "IntelMausi.kext", "macos_support": "full", "needs_patch": false },
+    "8086:15b8": { "name": "Intel Ethernet Connection I219-V",  "category": "ethernet", "kext": "IntelMausi.kext", "macos_support": "full", "needs_patch": false },
+    "8086:15bb": { "name": "Intel Ethernet Connection I219-LM", "category": "ethernet", "kext": "IntelMausi.kext", "macos_support": "full", "needs_patch": false },
+    "8086:15bd": { "name": "Intel Ethernet Connection I219-V",  "category": "ethernet", "kext": "IntelMausi.kext", "macos_support": "full", "needs_patch": false },
+    "8086:15be": { "name": "Intel Ethernet Connection I219-LM", "category": "ethernet", "kext": "IntelMausi.kext", "macos_support": "full", "needs_patch": false },
+    "8086:0d4c": { "name": "Intel Ethernet Connection I219-LM", "category": "ethernet", "kext": "IntelMausi.kext", "macos_support": "full", "needs_patch": false },
+    "8086:15f2": { "name": "Intel Ethernet Connection I225-V",  "category": "ethernet", "kext": "IntelMausi.kext", "macos_support": "full", "needs_patch": true,  "patch_note": "Apply e1000LegacySupport / ForceAutoNeg quirk" },
+    "8086:15f3": { "name": "Intel Ethernet Connection I225-V",  "category": "ethernet", "kext": "IntelMausi.kext", "macos_support": "full", "needs_patch": true,  "patch_note": "Apply e1000LegacySupport / ForceAutoNeg quirk" },
+    "8086:3102": { "name": "Intel Ethernet Connection I226-V",  "category": "ethernet", "kext": "IntelMausi.kext", "macos_support": "full", "needs_patch": true,  "patch_note": "I226 quirk (same as I225 family)" },
+    "8086:15d8": { "name": "Intel Ethernet Connection I219-V",  "category": "ethernet", "kext": "IntelMausi.kext", "macos_support": "full", "needs_patch": false },
+    "8086:1539": { "name": "Intel I211 Gigabit",               "category": "ethernet", "kext": "IntelMausi.kext", "macos_support": "full", "needs_patch": false },
+    "8086:1502": { "name": "Intel I218-V",                     "category": "ethernet", "kext": "IntelMausi.kext", "macos_support": "full", "needs_patch": false },
+    "8086:157f": { "name": "Intel I210",                       "category": "ethernet", "kext": "IntelMausi.kext", "macos_support": "full", "needs_patch": false },
+    "8086:1f41": { "name": "Intel I218-LM2",                   "category": "ethernet", "kext": "IntelMausi.kext", "macos_support": "full", "needs_patch": false },
+
+    "10ec:8168": { "name": "Realtek RTL8111/8168",             "category": "ethernet", "kext": "RealtekRTL8111.kext", "macos_support": "full", "needs_patch": false },
+    "10ec:8161": { "name": "Realtek RTL8111/8168",             "category": "ethernet", "kext": "RealtekRTL8111.kext", "macos_support": "full", "needs_patch": false },
+    "10ec:8125": { "name": "Realtek RTL8125 2.5GbE",           "category": "ethernet", "kext": "LucyRTL8125.kext",   "macos_support": "full", "needs_patch": false },
+
+    "14e4:43a0": { "name": "Broadcom BCM57766",                "category": "ethernet", "kext": "native",            "macos_support": "full", "needs_patch": false },
+    "14e4:1684": { "name": "Broadcom BCM57781",                "category": "ethernet", "kext": "native",            "macos_support": "full", "needs_patch": false },
+
+    "8086:24f3": { "name": "Intel Wireless 8260",              "category": "wifi", "kext": "AirportItlwm.kext", "macos_support": "partial", "needs_patch": false },
+    "8086:2723": { "name": "Intel Wireless-AX 210",            "category": "wifi", "kext": "AirportItlwm.kext", "macos_support": "partial", "needs_patch": false },
+    "8086:2725": { "name": "Intel Wireless-AX 210",            "category": "wifi", "kext": "AirportItlwm.kext", "macos_support": "partial", "needs_patch": false },
+    "8086:43f0": { "name": "Intel Wi-Fi 6 AX201",              "category": "wifi", "kext": "AirportItlwm.kext", "macos_support": "partial", "needs_patch": false },
+    "8086:51f0": { "name": "Intel Wi-Fi 6 AX211",              "category": "wifi", "kext": "AirportItlwm.kext", "macos_support": "partial", "needs_patch": false },
+    "8086:54f0": { "name": "Intel Wi-Fi 6E AX211",             "category": "wifi", "kext": "AirportItlwm.kext", "macos_support": "partial", "needs_patch": false },
+    "8086:7a70": { "name": "Intel Wi-Fi 6E AX211",             "category": "wifi", "kext": "AirportItlwm.kext", "macos_support": "partial", "needs_patch": false },
+
+    "8086:9d2f": { "name": "Intel Sunrise Point-LP USB 3.0 xHCI", "category": "usb_controller", "kext": null, "macos_support": "full", "needs_patch": false, "needs_usb_map": true },
+
+    "8086:1916": { "name": "Intel HD Graphics 520 (Skylake GT2)",   "category": "gpu", "kext": "WhateverGreen.kext", "macos_support": "dropped", "gpu_gen": "Skylake GT2", "needs_agdp_patch": null },
+    "8086:191b": { "name": "Intel HD Graphics 530 (Skylake GT2)",   "category": "gpu", "kext": "WhateverGreen.kext", "macos_support": "dropped", "gpu_gen": "Skylake GT2", "needs_agdp_patch": null },
+    "8086:3e9b": { "name": "Intel UHD Graphics 630 (Coffee Lake)",  "category": "gpu", "kext": "WhateverGreen.kext", "macos_support": "full",    "gpu_gen": "Coffee Lake GT2", "needs_agdp_patch": null },
+    "8086:9bc8": { "name": "Intel UHD Graphics 630 (Comet Lake)",   "category": "gpu", "kext": "WhateverGreen.kext", "macos_support": "full",    "gpu_gen": "Comet Lake GT2", "needs_agdp_patch": null },
+    "8086:4905": { "name": "Intel Iris Xe (DG1)",                   "category": "gpu", "kext": null,                "macos_support": "none",    "gpu_gen": "DG1", "needs_agdp_patch": null },
+    "8086:a780": { "name": "Intel UHD Graphics 770 (Alder Lake)",   "category": "gpu", "kext": "WhateverGreen.kext", "macos_support": "partial", "gpu_gen": "Alder Lake GT1", "needs_agdp_patch": null },
+    "8086:a781": { "name": "Intel UHD Graphics 770 (Raptor Lake)",  "category": "gpu", "kext": "WhateverGreen.kext", "macos_support": "partial", "gpu_gen": "Raptor Lake",   "needs_agdp_patch": null },
+
+    "1002:73bf": { "name": "AMD Radeon RX 6800 XT",       "category": "gpu", "kext": "WhateverGreen.kext", "macos_support": "full", "gpu_gen": "Navi 21", "needs_agdp_patch": true },
+    "1002:73a5": { "name": "AMD Radeon RX 6800",          "category": "gpu", "kext": "WhateverGreen.kext", "macos_support": "full", "gpu_gen": "Navi 21", "needs_agdp_patch": true },
+    "1002:73df": { "name": "AMD Radeon RX 6700 XT",       "category": "gpu", "kext": "WhateverGreen.kext", "macos_support": "full", "gpu_gen": "Navi 22", "needs_agdp_patch": true },
+    "1002:73ff": { "name": "AMD Radeon RX 6600",          "category": "gpu", "kext": "WhateverGreen.kext", "macos_support": "full", "gpu_gen": "Navi 23", "needs_agdp_patch": true },
+    "1002:744c": { "name": "AMD Radeon RX 7900 XTX",      "category": "gpu", "kext": "WhateverGreen.kext", "macos_support": "full", "gpu_gen": "Navi 31", "needs_agdp_patch": true },
+    "1002:7480": { "name": "AMD Radeon RX 7800 XT",       "category": "gpu", "kext": "WhateverGreen.kext", "macos_support": "full", "gpu_gen": "Navi 32", "needs_agdp_patch": true },
+    "1002:73e0": { "name": "AMD Radeon RX 7600",          "category": "gpu", "kext": "WhateverGreen.kext", "macos_support": "full", "gpu_gen": "Navi 33", "needs_agdp_patch": true },
+    "1002:731f": { "name": "AMD Radeon RX 5700 XT",       "category": "gpu", "kext": "WhateverGreen.kext", "macos_support": "full", "gpu_gen": "Navi 10", "needs_agdp_patch": true },
+    "1002:67df": { "name": "AMD Radeon RX 580",           "category": "gpu", "kext": "WhateverGreen.kext", "macos_support": "full", "gpu_gen": "Polaris 20", "needs_agdp_patch": true },
+    "1002:687f": { "name": "AMD Radeon RX Vega 64",       "category": "gpu", "kext": "WhateverGreen.kext", "macos_support": "full", "gpu_gen": "Vega 10", "needs_agdp_patch": true },
+
+    "10de:1b06": { "name": "Nvidia GTX 1080 Ti",          "category": "gpu", "kext": null, "macos_support": "none", "gpu_gen": "Pascal", "needs_agdp_patch": null },
+    "10de:1e04": { "name": "Nvidia RTX 2080 Ti",          "category": "gpu", "kext": null, "macos_support": "none", "gpu_gen": "Turing", "needs_agdp_patch": null },
+    "10de:2204": { "name": "Nvidia RTX 3090",             "category": "gpu", "kext": null, "macos_support": "none", "gpu_gen": "Ampere", "needs_agdp_patch": null },
+    "10de:2684": { "name": "Nvidia RTX 4090",             "category": "gpu", "kext": null, "macos_support": "none", "gpu_gen": "Ada Lovelace", "needs_agdp_patch": null }
+  }
+}

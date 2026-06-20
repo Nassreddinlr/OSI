@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HackInstall — Full Project Blueprint v2.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:       #0c0c0f;
+  --bg2:      #111116;
+  --bg3:      #17171e;
+  --bg4:      #1e1e28;
+  --border:   #252530;
+  --border2:  #2e2e3d;
+  --violet:   #7c3aed;
+  --violet2:  #6d28d9;
+  --violet-glow: rgba(124,58,237,0.15);
+  --cyan:     #06b6d4;
+  --green:    #10b981;
+  --amber:    #f59e0b;
+  --red:      #ef4444;
+  --blue:     #3b82f6;
+  --pink:     #ec4899;
+  --text:     #c8c8d4;
+  --text-dim: #5c5c78;
+  --text-mid: #8888a8;
+  --white:    #f0f0f8;
+  --mono:     'JetBrains Mono',monospace;
+  --sans:     'Space Grotesk',sans-serif;
+  --sidebar:  240px;
+}
+
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased;display:flex;min-height:100vh}
+
+/* ─── SIDEBAR ─── */
+.sidebar{
+  width:var(--sidebar);flex-shrink:0;
+  position:fixed;top:0;left:0;height:100vh;
+  background:var(--bg2);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;overflow-y:auto;z-index:100;
+  padding:28px 0 40px;
+}
+.sidebar-logo{
+  padding:0 24px 28px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:20px;
+}
+.sidebar-logo .brand{
+  font-family:var(--mono);font-size:14px;font-weight:700;
+  letter-spacing:0.06em;color:var(--white);
+}
+.sidebar-logo .brand span{color:var(--violet);}
+.sidebar-logo .version{
+  font-family:var(--mono);font-size:10px;color:var(--text-dim);
+  margin-top:4px;letter-spacing:0.1em;
+}
+.sidebar-group{margin-bottom:6px;}
+.sidebar-group-label{
+  font-family:var(--mono);font-size:9px;font-weight:700;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--text-dim);padding:0 24px 8px;
+}
+.sidebar a{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 24px;font-size:13px;font-weight:500;
+  color:var(--text-mid);text-decoration:none;
+  border-left:2px solid transparent;
+  transition:color .15s,background .15s,border-color .15s;
+}
+.sidebar a:hover{color:var(--white);background:var(--bg3);}
+.sidebar a.active{color:var(--violet);border-left-color:var(--violet);background:var(--violet-glow);}
+.sidebar a .ico{font-size:12px;width:16px;text-align:center;opacity:.7;}
+.sidebar-footer{margin-top:auto;padding:20px 24px 0;border-top:1px solid var(--border);}
+.sidebar-footer p{font-family:var(--mono);font-size:10px;color:var(--text-dim);line-height:1.6;}
+.sidebar-footer span{color:var(--green);}
+
+/* ─── MAIN CONTENT ─── */
+.main{margin-left:var(--sidebar);flex:1;min-width:0;}
+
+/* ─── SECTIONS ─── */
+.section{padding:72px 56px;border-bottom:1px solid var(--border);position:relative;}
+.section:last-of-type{border-bottom:none;}
+
+.eyebrow{
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--violet);margin-bottom:12px;
+  display:flex;align-items:center;gap:10px;
+}
+.eyebrow::before{content:'';display:inline-block;width:20px;height:1px;background:var(--violet);}
+.section-title{
+  font-size:clamp(26px,3vw,38px);font-weight:700;
+  color:var(--white);letter-spacing:-0.02em;margin-bottom:10px;line-height:1.15;
+}
+.section-sub{font-size:14px;color:var(--text-mid);max-width:680px;margin-bottom:44px;line-height:1.8;}
+
+/* ─── HERO ─── */
+.hero{
+  padding:80px 56px 72px;
+  background: radial-gradient(ellipse 700px 400px at 60% 0%, rgba(124,58,237,0.08) 0%, transparent 70%);
+  border-bottom:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.hero::after{
+  content:'';position:absolute;top:0;right:0;width:380px;height:380px;
+  background:radial-gradient(circle,rgba(124,58,237,0.06) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--violet-glow);border:1px solid rgba(124,58,237,.3);
+  border-radius:20px;padding:5px 14px;
+  font-family:var(--mono);font-size:11px;font-weight:600;
+  color:var(--violet);letter-spacing:0.08em;margin-bottom:28px;
+}
+.hero-tag::before{content:'●';font-size:7px;animation:pulse-dot 2s infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{
+  font-size:clamp(40px,5vw,68px);font-weight:700;
+  line-height:1.05;letter-spacing:-0.03em;
+  color:var(--white);margin-bottom:20px;
+}
+.hero h1 em{
+  font-style:normal;
+  background:linear-gradient(135deg,var(--violet),var(--cyan));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-sub{font-size:16px;color:var(--text-mid);max-width:540px;line-height:1.8;margin-bottom:44px;}
+.hero-stats{display:flex;gap:1px;margin-bottom:48px;background:var(--border);border-radius:12px;overflow:hidden;border:1px solid var(--border);}
+.hero-stat{flex:1;background:var(--bg2);padding:18px 20px;}
+.hero-stat-val{font-family:var(--mono);font-size:26px;font-weight:700;color:var(--white);line-height:1;margin-bottom:4px;}
+.hero-stat-val.v{color:var(--violet);}
+.hero-stat-val.c{color:var(--cyan);}
+.hero-stat-val.g{color:var(--green);}
+.hero-stat-val.a{color:var(--amber);}
+.hero-stat-label{font-size:11px;color:var(--text-dim);letter-spacing:0.05em;}
+
+/* ─── PIPELINE HERO ELEMENT ─── */
+.pipeline{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:14px;overflow:hidden;
+}
+.pipeline-header{
+  padding:14px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+}
+.pipeline-dot{width:10px;height:10px;border-radius:50%;}
+.pipeline-header .title{font-family:var(--mono);font-size:11px;color:var(--text-dim);margin-left:4px;}
+.pipeline-body{padding:24px;display:flex;align-items:stretch;gap:0;overflow-x:auto;}
+.pipe-node{flex:1;min-width:130px;}
+.pipe-card{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:10px;padding:16px;height:100%;
+  transition:border-color .2s,box-shadow .2s;cursor:default;
+}
+.pipe-card:hover{border-color:var(--violet);box-shadow:0 0 20px var(--violet-glow);}
+.pipe-n{font-family:var(--mono);font-size:9px;font-weight:700;color:var(--violet);letter-spacing:.15em;margin-bottom:8px;}
+.pipe-icon{font-size:20px;margin-bottom:8px;}
+.pipe-title{font-size:12px;font-weight:600;color:var(--white);margin-bottom:4px;}
+.pipe-detail{font-size:10px;color:var(--text-dim);line-height:1.5;}
+.pipe-connector{
+  flex:0 0 36px;display:flex;align-items:center;justify-content:center;
+  color:var(--border2);font-size:16px;
+}
+.pipe-connector span{animation:slide-right 1.5s ease-in-out infinite;}
+@keyframes slide-right{0%,100%{transform:translateX(-3px);opacity:.4}50%{transform:translateX(3px);opacity:1}}
+
+/* ─── HARDWARE SCAN TREE (SIGNATURE) ─── */
+.scan-tree{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:14px;overflow:hidden;font-family:var(--mono);
+}
+.scan-tree-header{
+  padding:12px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+}
+.scan-tree-header .file-name{font-size:12px;color:var(--text-dim);}
+.scan-tree-header .badge-run{
+  margin-left:auto;font-size:10px;font-weight:700;
+  background:var(--violet-glow);color:var(--violet);
+  border:1px solid rgba(124,58,237,.3);border-radius:4px;padding:2px 8px;
+}
+.tree-body{padding:16px 20px;}
+.tree-row{
+  display:flex;align-items:flex-start;gap:0;
+  font-size:12px;line-height:1;padding:3px 0;
+  cursor:pointer;user-select:none;
+}
+.tree-row:hover .tree-key{color:var(--white);}
+.tree-indent{color:var(--border2);white-space:pre;flex-shrink:0;}
+.tree-toggle{color:var(--text-dim);width:14px;flex-shrink:0;font-size:10px;transition:transform .2s;}
+.tree-toggle.open{transform:rotate(90deg);}
+.tree-key{color:#c084fc;margin-right:4px;}
+.tree-colon{color:var(--text-dim);margin-right:6px;}
+.tree-val-str{color:#86efac;}
+.tree-val-num{color:#fcd34d;}
+.tree-val-bool{color:#f9a8d4;}
+.tree-val-null{color:var(--text-dim);}
+.tree-method{
+  margin-left:auto;font-size:9px;font-weight:600;
+  padding:1px 7px;border-radius:3px;flex-shrink:0;
+}
+.tm-wmi{background:#1e3a5f;color:#60a5fa;border:1px solid #1d4ed8;}
+.tm-lspci{background:#022c22;color:#6ee7b7;border:1px solid #065f46;}
+.tm-proc{background:#2d1b69;color:#c4b5fd;border:1px solid #5b21b6;}
+.tm-both{background:#1c1c10;color:#fcd34d;border:1px solid #78350f;}
+.tree-children{display:none;}
+.tree-children.open{display:block;}
+
+/* ─── TAGS ─── */
+.tag{
+  display:inline-flex;align-items:center;gap:4px;
+  background:var(--bg4);border:1px solid var(--border2);
+  border-radius:5px;padding:3px 10px;
+  font-family:var(--mono);font-size:11px;color:var(--text-mid);
+}
+.tag.v{border-color:#4c1d95;color:#c084fc;background:#1a0533;}
+.tag.c{border-color:#164e63;color:var(--cyan);background:#021f29;}
+.tag.g{border-color:#065f46;color:var(--green);background:#022c22;}
+.tag.a{border-color:#78350f;color:var(--amber);background:#1c0a00;}
+.tag.r{border-color:#7f1d1d;color:var(--red);background:#1c0606;}
+.tag.b{border-color:#1d4ed8;color:#60a5fa;background:#0d1830;}
+.tag.p{border-color:#be185d;color:#f9a8d4;background:#1c0619;}
+.tags{display:flex;flex-wrap:wrap;gap:6px;}
+
+/* ─── CARDS GRID ─── */
+.cards-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.cards-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.cards-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:12px;padding:20px 22px;
+  transition:border-color .2s,box-shadow .2s;
+}
+.card:hover{border-color:var(--border2);}
+.card-icon{font-size:22px;margin-bottom:12px;}
+.card-title{font-size:13px;font-weight:600;color:var(--white);margin-bottom:6px;}
+.card-desc{font-size:12px;color:var(--text-mid);line-height:1.6;}
+
+/* ─── KEXT TABLE ─── */
+.kext-grid{display:flex;flex-direction:column;gap:2px;}
+.kext-row{
+  display:grid;grid-template-columns:200px 1fr auto auto;
+  align-items:center;gap:16px;
+  padding:12px 16px;background:var(--bg2);border-radius:8px;
+  border:1px solid var(--border);
+  transition:border-color .15s;
+}
+.kext-row:hover{border-color:var(--border2);}
+.kext-row.header{background:var(--bg3);border-color:transparent;padding:8px 16px;}
+.kext-name{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--white);}
+.kext-name .sub{font-weight:400;color:var(--text-dim);display:block;font-size:10px;margin-top:1px;}
+.kext-desc{font-size:12px;color:var(--text-mid);}
+.kext-req{font-family:var(--mono);font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;white-space:nowrap;}
+.kext-req.always{background:#022c22;color:var(--green);border:1px solid #065f46;}
+.kext-req.intel{background:#0d1830;color:#60a5fa;border:1px solid #1d4ed8;}
+.kext-req.amd{background:#1c0a00;color:var(--amber);border:1px solid #78350f;}
+.kext-req.cond{background:#1a0533;color:#c084fc;border:1px solid #4c1d95;}
+.kext-req.wifi{background:#021f29;color:var(--cyan);border:1px solid #164e63;}
+.kext-source{font-family:var(--mono);font-size:10px;color:var(--text-dim);}
+.kext-header-label{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);}
+
+/* ─── HW SUPPORT TABLE ─── */
+.hw-table{width:100%;border-collapse:collapse;}
+.hw-table th{
+  font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--text-dim);padding:10px 14px;border-bottom:1px solid var(--border);text-align:left;
+}
+.hw-table td{
+  padding:11px 14px;border-bottom:1px solid var(--border);
+  font-size:12px;color:var(--text-mid);vertical-align:middle;
+}
+.hw-table tr:last-child td{border-bottom:none;}
+.hw-table tr:hover td{background:rgba(255,255,255,.015);}
+.hw-table td:first-child{font-weight:600;color:var(--text);}
+.hw-table td:nth-child(2){font-family:var(--mono);font-size:11px;color:var(--text-dim);}
+.support-badge{
+  display:inline-block;font-family:var(--mono);font-size:10px;font-weight:700;
+  padding:2px 8px;border-radius:4px;white-space:nowrap;
+}
+.sb-full{background:#022c22;color:var(--green);border:1px solid #065f46;}
+.sb-part{background:#1c0a00;color:var(--amber);border:1px solid #78350f;}
+.sb-none{background:#1c0606;color:var(--red);border:1px solid #7f1d1d;}
+.sb-dropped{background:#1a0533;color:#c084fc;border:1px solid #4c1d95;}
+
+/* ─── DIFF TABLE ─── */
+.diff-table{width:100%;border-collapse:collapse;}
+.diff-table th{
+  font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;
+  padding:10px 14px;border-bottom:1px solid var(--border);text-align:left;
+}
+.diff-table th:first-child{color:var(--text-dim);}
+.diff-table th:nth-child(2){color:#60a5fa;}
+.diff-table th:nth-child(3){color:#6ee7b7;}
+.diff-table td{
+  padding:11px 14px;border-bottom:1px solid var(--border);
+  font-size:12px;vertical-align:top;
+}
+.diff-table tr:last-child td{border-bottom:none;}
+.diff-table td:first-child{font-family:var(--mono);font-size:11px;color:var(--text-dim);white-space:nowrap;font-weight:600;}
+.diff-table td:nth-child(2){color:#93c5fd;}
+.diff-table td:nth-child(3){color:#6ee7b7;}
+.diff-table tr:hover td{background:rgba(255,255,255,.015);}
+code{font-family:var(--mono);font-size:11px;color:var(--cyan);background:rgba(6,182,212,.08);padding:1px 5px;border-radius:3px;}
+
+/* ─── CODE BLOCK ─── */
+.code-block{
+  background:#07070a;border:1px solid var(--border);
+  border-radius:10px;overflow:hidden;
+}
+.code-block-header{
+  padding:10px 16px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:6px;
+}
+.code-block-header .lang{font-family:var(--mono);font-size:10px;color:var(--text-dim);}
+.code-block-header .file{font-family:var(--mono);font-size:10px;color:var(--violet);margin-left:auto;}
+.code-pre{padding:20px;font-family:var(--mono);font-size:12px;line-height:1.9;overflow-x:auto;}
+.ck{color:#c084fc;} .cv{color:#86efac;} .cn{color:#fcd34d;}
+.cc{color:var(--text-dim);} .cf{color:var(--cyan);} .cs{color:#f9a8d4;}
+
+/* ─── BIOS CHECKLIST ─── */
+.bios-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.bios-group{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.bios-group-title{
+  padding:12px 18px;border-bottom:1px solid var(--border);
+  font-family:var(--mono);font-size:11px;font-weight:700;
+  display:flex;align-items:center;gap:8px;
+}
+.bios-group-title.enable{color:var(--green);}
+.bios-group-title.disable{color:var(--red);}
+.bios-item{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:10px 18px;border-bottom:1px solid var(--border);
+  font-size:12px;
+}
+.bios-item:last-child{border-bottom:none;}
+.bios-check{font-family:var(--mono);font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.bios-check.on{color:var(--green);}
+.bios-check.off{color:var(--red);}
+.bios-setting{color:var(--white);font-weight:500;}
+.bios-note{color:var(--text-dim);font-size:11px;margin-top:2px;}
+
+/* ─── FILE STRUCTURE ─── */
+.file-tree{
+  background:#07070a;border:1px solid var(--border);
+  border-radius:10px;padding:20px;font-family:var(--mono);
+  font-size:12px;line-height:2;
+}
+.ft-dir{color:#c084fc;}
+.ft-file{color:#86efac;}
+.ft-json{color:#fcd34d;}
+.ft-py{color:var(--cyan);}
+.ft-comment{color:var(--text-dim);}
+.ft-indent{color:var(--border2);}
+
+/* ─── RISK TABLE ─── */
+.risk-table{width:100%;border-collapse:collapse;}
+.risk-table th{
+  font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--text-dim);padding:10px 14px;border-bottom:1px solid var(--border);text-align:left;
+}
+.risk-table td{padding:13px 14px;border-bottom:1px solid var(--border);font-size:12px;color:var(--text-mid);vertical-align:top;}
+.risk-table tr:last-child td{border-bottom:none;}
+.risk-table td:first-child{color:var(--text);font-weight:500;font-size:13px;}
+.risk-table tr:hover td{background:rgba(255,255,255,.015);}
+.sev{font-family:var(--mono);font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;white-space:nowrap;}
+.sev.H{background:#1c0606;color:var(--red);border:1px solid #7f1d1d;}
+.sev.M{background:#1c0a00;color:var(--amber);border:1px solid #78350f;}
+.sev.L{background:#022c22;color:var(--green);border:1px solid #065f46;}
+
+/* ─── PHASES ─── */
+.phases{display:flex;flex-direction:column;gap:14px;}
+.phase{
+  background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+  display:grid;grid-template-columns:100px 1fr;overflow:hidden;
+}
+.phase-stripe{
+  padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border-right:1px solid var(--border);text-align:center;
+}
+.phase-stripe.p1{background:rgba(124,58,237,.08);}
+.phase-stripe.p2{background:rgba(6,182,212,.06);}
+.phase-stripe.p3{background:rgba(16,185,129,.06);}
+.phase-stripe.p4{background:rgba(245,158,11,.06);}
+.phase-n{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.15em;margin-bottom:6px;}
+.phase-n.p1{color:var(--violet);}
+.phase-n.p2{color:var(--cyan);}
+.phase-n.p3{color:var(--green);}
+.phase-n.p4{color:var(--amber);}
+.phase-weeks{font-size:10px;color:var(--text-dim);}
+.phase-body{padding:20px 24px;}
+.phase-title{font-size:15px;font-weight:600;color:var(--white);margin-bottom:6px;}
+.phase-desc{font-size:13px;color:var(--text-mid);margin-bottom:12px;line-height:1.7;}
+
+/* ─── STACK ─── */
+.stack-section{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.stack-item{
+  background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+  padding:16px 18px;transition:border-color .2s;
+}
+.stack-item:hover{border-color:var(--border2);}
+.stack-role{font-size:10px;color:var(--text-dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px;}
+.stack-tech{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--white);margin-bottom:4px;}
+.stack-why{font-size:12px;color:var(--text-mid);line-height:1.55;}
+.stack-badges{display:flex;gap:5px;margin-top:8px;}
+
+/* ─── SCROLL REVEAL ─── */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .45s ease,transform .45s ease;}
+.reveal.visible{opacity:1;transform:none;}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:900px){
+  .sidebar{display:none;}
+  .main{margin-left:0;}
+  .section{padding:48px 24px;}
+  .hero{padding:60px 24px 48px;}
+  .cards-2,.cards-3,.cards-4{grid-template-columns:1fr;}
+  .kext-row{grid-template-columns:1fr 1fr;grid-template-rows:auto auto;}
+  .bios-grid{grid-template-columns:1fr;}
+  .diff-table{font-size:11px;}
+  .stack-section{grid-template-columns:1fr;}
+  .phase{grid-template-columns:1fr;}
+  .hero-stats{flex-wrap:wrap;}
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:var(--bg2);}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">HACK<span>INSTALL</span></div>
+    <div class="version">v2.0 — FULL BLUEPRINT</div>
+  </div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-group-label">Overview</div>
+    <a href="#overview" class="active"><span class="ico">◈</span> Pipeline</a>
+    <a href="#how"><span class="ico">⟶</span> How It Works</a>
+  </div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-group-label">Hardware</div>
+    <a href="#scan"><span class="ico">⊕</span> Scan Tree</a>
+    <a href="#hwsupport"><span class="ico">▦</span> Support Matrix</a>
+    <a href="#kexts"><span class="ico">⬡</span> Kext Database</a>
+    <a href="#bios"><span class="ico">⚙</span> BIOS Checklist</a>
+  </div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-group-label">Development</div>
+    <a href="#platform"><span class="ico">⇄</span> Win vs Linux</a>
+    <a href="#stack"><span class="ico">◧</span> Tech Stack</a>
+    <a href="#structure"><span class="ico">⊞</span> File Structure</a>
+  </div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-group-label">Planning</div>
+    <a href="#roadmap"><span class="ico">◎</span> Roadmap</a>
+    <a href="#risks"><span class="ico">⚠</span> Risk Register</a>
+  </div>
+
+  <div class="sidebar-footer">
+    <p>Built on <span>Kubuntu 24.04</span><br>Python 3.11 · OpenCore 1.0.x<br>Target: Windows + Linux</p>
+  </div>
+</nav>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+
+<!-- ─── HERO ─── -->
+<section class="hero" id="overview">
+  <div class="hero-tag">LIVE PROJECT BLUEPRINT</div>
+  <h1>One tool.<br><em>macOS on any PC.</em></h1>
+  <p class="hero-sub">HackInstall scans your machine, detects every piece of hardware, generates a complete OpenCore EFI, builds a bootable macOS USB — fully automated. Runs on Windows and Linux (Kubuntu/Ubuntu).</p>
+
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="hero-stat-val v">~60%</div><div class="hero-stat-label">Hardware coverage target</div></div>
+    <div class="hero-stat"><div class="hero-stat-val g">18+</div><div class="hero-stat-label">Hardware components scanned</div></div>
+    <div class="hero-stat"><div class="hero-stat-val c">30+</div><div class="hero-stat-label">Kexts in database</div></div>
+    <div class="hero-stat"><div class="hero-stat-val a">0</div><div class="hero-stat-label">Manual steps for the user</div></div>
+    <div class="hero-stat"><div class="hero-stat-val v">2</div><div class="hero-stat-label">Host OS supported</div></div>
+  </div>
+
+  <div class="pipeline">
+    <div class="pipeline-header">
+      <div class="pipeline-dot" style="background:#ef4444"></div>
+      <div class="pipeline-dot" style="background:#f59e0b"></div>
+      <div class="pipeline-dot" style="background:#10b981"></div>
+      <span class="title">hackinstall — full automation pipeline</span>
+    </div>
+    <div class="pipeline-body">
+      <div class="pipe-node"><div class="pipe-card">
+        <div class="pipe-n">STEP 01</div><div class="pipe-icon">🔍</div>
+        <div class="pipe-title">Deep Scan</div>
+        <div class="pipe-detail">CPU · GPU · Audio · Ethernet · USB · Ports · Bluetooth · Storage · RAM · Board</div>
+      </div></div>
+      <div class="pipe-connector"><span>→</span></div>
+      <div class="pipe-node"><div class="pipe-card">
+        <div class="pipe-n">STEP 02</div><div class="pipe-icon">⚙️</div>
+        <div class="pipe-title">EFI Generator</div>
+        <div class="pipe-detail">config.plist · kexts · SSDTs · SMBIOS · boot args · kernel patches</div>
+      </div></div>
+      <div class="pipe-connector"><span>→</span></div>
+      <div class="pipe-node"><div class="pipe-card">
+        <div class="pipe-n">STEP 03</div><div class="pipe-icon">📥</div>
+        <div class="pipe-title">Download</div>
+        <div class="pipe-detail">macOS recovery from Apple · OpenCore from GitHub · kexts from repos</div>
+      </div></div>
+      <div class="pipe-connector"><span>→</span></div>
+      <div class="pipe-node"><div class="pipe-card">
+        <div class="pipe-n">STEP 04</div><div class="pipe-icon">💾</div>
+        <div class="pipe-title">Write USB</div>
+        <div class="pipe-detail">Format · flash recovery · mount EFI · copy config · verify · done</div>
+      </div></div>
+      <div class="pipe-connector"><span>→</span></div>
+      <div class="pipe-node"><div class="pipe-card">
+        <div class="pipe-n">STEP 05</div><div class="pipe-icon">🍎</div>
+        <div class="pipe-title">Install macOS</div>
+        <div class="pipe-detail">User reboots · selects USB in BIOS · standard macOS installer takes over</div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── HOW IT WORKS ─── -->
+<section class="section" id="how">
+  <div class="eyebrow">How It Works</div>
+  <h2 class="section-title">Every step, explained</h2>
+  <p class="section-sub">The user runs one file. No terminal knowledge needed, no config editing, no reading Dortania guides at 2am. Here's what happens under the hood.</p>
+
+  <div class="cards-2 reveal" style="margin-bottom:16px;">
+    <div class="card">
+      <div class="card-icon">🔍</div>
+      <div class="card-title">Step 1 — Deep Hardware Scan</div>
+      <div class="card-desc">The tool queries every hardware component using OS-native APIs. On Windows it uses WMI. On Linux it reads <code>lspci</code>, <code>dmidecode</code>, <code>/proc</code>, and <code>/sys</code>. It builds a complete hardware_profile.json that drives every decision downstream. Nothing is guessed — if it can't detect something, it flags it and asks the user.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚙️</div>
+      <div class="card-title">Step 2 — EFI Config Generation</div>
+      <div class="card-desc">Using the hardware profile, the tool selects the right OpenCore version, picks every required kext from the database, generates a valid <code>config.plist</code> from templates, applies CPU quirks, sets the SMBIOS to the right Mac model, and generates SSDTs for ACPI patches. All automated via a compatibility matrix JSON.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📥</div>
+      <div class="card-title">Step 3 — Download Everything</div>
+      <div class="card-desc">macOS recovery is fetched directly from Apple's CDN (same as <code>macrecovery.py</code>). OpenCore and all kexts are pulled from their official GitHub Releases. Integrity is verified with checksums. User picks macOS version: Ventura, Sonoma, or Sequoia.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">💾</div>
+      <div class="card-title">Step 4 — USB Creation</div>
+      <div class="card-desc">The USB is formatted, the recovery image written, the EFI partition mounted, and the generated EFI folder copied in. On Windows: <code>diskpart</code> + <code>mountvol</code>. On Linux: <code>dd</code> + <code>parted</code> + <code>mount</code>. The result is an identical bootable USB on both platforms.</div>
+    </div>
+  </div>
+  <div class="cards-2 reveal">
+    <div class="card">
+      <div class="card-icon">✅</div>
+      <div class="card-title">Step 5 — Validation & Reporting</div>
+      <div class="card-desc">Before the user touches their BIOS, the tool verifies the USB: EFI partition exists, config.plist is valid XML, all kexts are in place, OpenCore is present. It generates a short summary report the user can save — useful for troubleshooting if boot fails.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🍎</div>
+      <div class="card-title">Step 6 — Boot & Install</div>
+      <div class="card-desc">User plugs in USB, restarts, enters BIOS boot menu, selects USB. OpenCore bootloader appears. macOS installer loads. User formats the target drive and installs. Post-install, the tool can optionally help mount and copy the EFI from USB to the internal drive's EFI partition.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SCAN TREE ─── -->
+<section class="section" id="scan">
+  <div class="eyebrow">Hardware Scan Tree</div>
+  <h2 class="section-title">Every component we detect</h2>
+  <p class="section-sub">This is the actual structure of <code>hardware_profile.json</code> — the output of Phase 1. Click any category to expand. Every field has a scan method: WMI (Windows), lspci/dmidecode (Linux), or /proc (Linux kernel).</p>
+
+  <div class="scan-tree reveal">
+    <div class="scan-tree-header">
+      <div style="display:flex;gap:5px">
+        <div style="width:10px;height:10px;border-radius:50%;background:#ef4444"></div>
+        <div style="width:10px;height:10px;border-radius:50%;background:#f59e0b"></div>
+        <div style="width:10px;height:10px;border-radius:50%;background:#10b981"></div>
+      </div>
+      <span class="file-name">hardware_profile.json</span>
+      <span class="badge-run">▶ scan output</span>
+    </div>
+    <div class="tree-body">
+      <div class="tree-row" onclick="toggleTree('cpu')">
+        <span class="tree-toggle" id="toggle-cpu">▶</span>
+        <span class="tree-key">"cpu"</span><span class="tree-colon">:</span><span class="tree-val-null">{...}</span>
+      </div>
+      <div class="tree-children" id="cpu">
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"name"</span><span class="tree-colon">:</span><span class="tree-val-str">"Intel Core i7-12700K"</span><span class="tree-method tm-wmi">WMI Win32_Processor</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"vendor"</span><span class="tree-colon">:</span><span class="tree-val-str">"Intel"</span><span class="tree-method tm-both">both</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"generation"</span><span class="tree-colon">:</span><span class="tree-val-num">12</span><span class="tree-method tm-both">parsed from model string</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"codename"</span><span class="tree-colon">:</span><span class="tree-val-str">"Alder Lake"</span><span class="tree-method tm-both">lookup table</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"cores"</span><span class="tree-colon">:</span><span class="tree-val-num">12</span><span class="tree-method tm-proc">/proc/cpuinfo</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"threads"</span><span class="tree-colon">:</span><span class="tree-val-num">20</span><span class="tree-method tm-proc">/proc/cpuinfo</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"has_igpu"</span><span class="tree-colon">:</span><span class="tree-val-bool">true</span><span class="tree-method tm-both">model lookup</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"amd_zen"</span><span class="tree-colon">:</span><span class="tree-val-null">null</span><span class="tree-method tm-both">AMD only</span></div>
+      </div>
+
+      <div class="tree-row" onclick="toggleTree('gpu')">
+        <span class="tree-toggle" id="toggle-gpu">▶</span>
+        <span class="tree-key">"gpu"</span><span class="tree-colon">:</span><span class="tree-val-null">[...]</span>
+      </div>
+      <div class="tree-children" id="gpu">
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">[0].name</span><span class="tree-colon">:</span><span class="tree-val-str">"AMD Radeon RX 6800 XT"</span><span class="tree-method tm-lspci">lspci -vmm / WMI</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">[0].vendor</span><span class="tree-colon">:</span><span class="tree-val-str">"AMD"</span><span class="tree-method tm-both">PCI vendor ID</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">[0].pci_id</span><span class="tree-colon">:</span><span class="tree-val-str">"1002:73bf"</span><span class="tree-method tm-lspci">lspci -n / WMI</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">[0].navi_gen</span><span class="tree-colon">:</span><span class="tree-val-str">"Navi 21"</span><span class="tree-method tm-both">PCI ID lookup</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">[0].macos_support</span><span class="tree-colon">:</span><span class="tree-val-bool">true</span><span class="tree-method tm-both">compat matrix</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">[0].needs_agdp_patch</span><span class="tree-colon">:</span><span class="tree-val-bool">true</span><span class="tree-method tm-both">model lookup</span></div>
+      </div>
+
+      <div class="tree-row" onclick="toggleTree('audio')">
+        <span class="tree-toggle" id="toggle-audio">▶</span>
+        <span class="tree-key">"audio"</span><span class="tree-colon">:</span><span class="tree-val-null">{...}</span>
+      </div>
+      <div class="tree-children" id="audio">
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"codec"</span><span class="tree-colon">:</span><span class="tree-val-str">"Realtek ALC897"</span><span class="tree-method tm-lspci">lspci / WMI Sound</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"codec_id"</span><span class="tree-colon">:</span><span class="tree-val-str">"10ec:0897"</span><span class="tree-method tm-proc">/proc/asound/card0/codec#0</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"layout_id"</span><span class="tree-colon">:</span><span class="tree-val-num">11</span><span class="tree-method tm-both">AppleALC layout DB</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"kext"</span><span class="tree-colon">:</span><span class="tree-val-str">"AppleALC.kext"</span><span class="tree-method tm-both">always required</span></div>
+      </div>
+
+      <div class="tree-row" onclick="toggleTree('ethernet')">
+        <span class="tree-toggle" id="toggle-ethernet">▶</span>
+        <span class="tree-key">"ethernet"</span><span class="tree-colon">:</span><span class="tree-val-null">[...]</span>
+      </div>
+      <div class="tree-children" id="ethernet">
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">[0].chip</span><span class="tree-colon">:</span><span class="tree-val-str">"Intel I225-V"</span><span class="tree-method tm-lspci">lspci / WMI Net</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">[0].pci_id</span><span class="tree-colon">:</span><span class="tree-val-str">"8086:15f3"</span><span class="tree-method tm-lspci">lspci -n</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">[0].kext</span><span class="tree-colon">:</span><span class="tree-val-str">"IntelMausi.kext"</span><span class="tree-method tm-both">compat matrix</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">[0].needs_patch</span><span class="tree-colon">:</span><span class="tree-val-bool">true</span><span class="tree-method tm-both">I225 quirk</span></div>
+      </div>
+
+      <div class="tree-row" onclick="toggleTree('usb')">
+        <span class="tree-toggle" id="toggle-usb">▶</span>
+        <span class="tree-key">"usb_controllers"</span><span class="tree-colon">:</span><span class="tree-val-null">[...]</span>
+      </div>
+      <div class="tree-children" id="usb">
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">[0].name</span><span class="tree-colon">:</span><span class="tree-val-str">"Intel Alder Lake USB 3.2 xHCI"</span><span class="tree-method tm-lspci">lspci / WMI USB</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">[0].pci_id</span><span class="tree-colon">:</span><span class="tree-val-str">"8086:7ae0"</span><span class="tree-method tm-lspci">lspci -n</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">[0].port_count</span><span class="tree-colon">:</span><span class="tree-val-num">26</span><span class="tree-method tm-both">needs mapping</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"usb_map_needed"</span><span class="tree-colon">:</span><span class="tree-val-bool">true</span><span class="tree-method tm-both">macOS USB port limit = 15</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"has_usb4"</span><span class="tree-colon">:</span><span class="tree-val-bool">false</span><span class="tree-method tm-lspci">PCI class 0c03</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"has_thunderbolt"</span><span class="tree-colon">:</span><span class="tree-val-bool">false</span><span class="tree-method tm-lspci">PCI class 0c03</span></div>
+      </div>
+
+      <div class="tree-row" onclick="toggleTree('wifi')">
+        <span class="tree-toggle" id="toggle-wifi">▶</span>
+        <span class="tree-key">"wireless"</span><span class="tree-colon">:</span><span class="tree-val-null">{...}</span>
+      </div>
+      <div class="tree-children" id="wifi">
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"wifi_chip"</span><span class="tree-colon">:</span><span class="tree-val-str">"Intel AX210"</span><span class="tree-method tm-lspci">lspci / WMI Net</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"wifi_pci_id"</span><span class="tree-colon">:</span><span class="tree-val-str">"8086:2725"</span><span class="tree-method tm-lspci">lspci -n</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"wifi_support"</span><span class="tree-colon">:</span><span class="tree-val-str">"partial"</span><span class="tree-method tm-both">AirportItlwm partial</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"bluetooth_chip"</span><span class="tree-colon">:</span><span class="tree-val-str">"Intel BT"</span><span class="tree-method tm-lspci">USB subsystem / PCI</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"bt_kext"</span><span class="tree-colon">:</span><span class="tree-val-str">"IntelBluetoothFirmware.kext"</span><span class="tree-method tm-both">compat matrix</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"airdrop_support"</span><span class="tree-colon">:</span><span class="tree-val-bool">false</span><span class="tree-method tm-both">needs BCM card</span></div>
+      </div>
+
+      <div class="tree-row" onclick="toggleTree('board')">
+        <span class="tree-toggle" id="toggle-board">▶</span>
+        <span class="tree-key">"motherboard"</span><span class="tree-colon">:</span><span class="tree-val-null">{...}</span>
+      </div>
+      <div class="tree-children" id="board">
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"vendor"</span><span class="tree-colon">:</span><span class="tree-val-str">"ASUS"</span><span class="tree-method tm-wmi">Win32_BaseBoard / dmidecode</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"model"</span><span class="tree-colon">:</span><span class="tree-val-str">"ROG STRIX Z690-A"</span><span class="tree-method tm-wmi">dmidecode -t baseboard</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"chipset"</span><span class="tree-colon">:</span><span class="tree-val-str">"Z690"</span><span class="tree-method tm-both">parsed from model</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"has_ec"</span><span class="tree-colon">:</span><span class="tree-val-bool">true</span><span class="tree-method tm-both">always on desktop</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"bios_version"</span><span class="tree-colon">:</span><span class="tree-val-str">"2202"</span><span class="tree-method tm-wmi">dmidecode -t bios</span></div>
+      </div>
+
+      <div class="tree-row" onclick="toggleTree('storage')">
+        <span class="tree-toggle" id="toggle-storage">▶</span>
+        <span class="tree-key">"storage"</span><span class="tree-colon">:</span><span class="tree-val-null">[...]</span>
+      </div>
+      <div class="tree-children" id="storage">
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">[0].type</span><span class="tree-colon">:</span><span class="tree-val-str">"NVMe"</span><span class="tree-method tm-lspci">lspci class 0108 / WMI Disk</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">[0].controller</span><span class="tree-colon">:</span><span class="tree-val-str">"Samsung 980 Pro"</span><span class="tree-method tm-both">vendor lookup</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">[0].needs_patch"</span><span class="tree-colon">:</span><span class="tree-val-bool">false</span><span class="tree-method tm-both">compat matrix</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"has_sata"</span><span class="tree-colon">:</span><span class="tree-val-bool">true</span><span class="tree-method tm-lspci">PCI class 0101</span></div>
+      </div>
+
+      <div class="tree-row" onclick="toggleTree('ram')">
+        <span class="tree-toggle" id="toggle-ram">▶</span>
+        <span class="tree-key">"memory"</span><span class="tree-colon">:</span><span class="tree-val-null">{...}</span>
+      </div>
+      <div class="tree-children" id="ram">
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"total_gb"</span><span class="tree-colon">:</span><span class="tree-val-num">32</span><span class="tree-method tm-proc">/proc/meminfo / WMI</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"type"</span><span class="tree-colon">:</span><span class="tree-val-str">"DDR5"</span><span class="tree-method tm-wmi">dmidecode -t memory</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"speed_mhz"</span><span class="tree-colon">:</span><span class="tree-val-num">4800</span><span class="tree-method tm-wmi">dmidecode</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"slots_used"</span><span class="tree-colon">:</span><span class="tree-val-num">2</span><span class="tree-method tm-wmi">dmidecode</span></div>
+      </div>
+
+      <div class="tree-row" onclick="toggleTree('input')">
+        <span class="tree-toggle" id="toggle-input">▶</span>
+        <span class="tree-key">"input_devices"</span><span class="tree-colon">:</span><span class="tree-val-null">{...}</span>
+      </div>
+      <div class="tree-children" id="input">
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"keyboard_bus"</span><span class="tree-colon">:</span><span class="tree-val-str">"USB"</span><span class="tree-method tm-both">USB device list</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"mouse_bus"</span><span class="tree-colon">:</span><span class="tree-val-str">"USB"</span><span class="tree-method tm-both">USB device list</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"ps2_present"</span><span class="tree-colon">:</span><span class="tree-val-bool">false</span><span class="tree-method tm-lspci">PCI class 0901</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"note"</span><span class="tree-colon">:</span><span class="tree-val-str">"PS/2 needs VoodooPS2 kext"</span></div>
+      </div>
+
+      <div class="tree-row" onclick="toggleTree('nvram')">
+        <span class="tree-toggle" id="toggle-nvram">▶</span>
+        <span class="tree-key">"nvram"</span><span class="tree-colon">:</span><span class="tree-val-null">{...}</span>
+      </div>
+      <div class="tree-children" id="nvram">
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"native_nvram"</span><span class="tree-colon">:</span><span class="tree-val-bool">true</span><span class="tree-method tm-both">Z490+ Intel = native</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"use_emulated"</span><span class="tree-colon">:</span><span class="tree-val-bool">false</span><span class="tree-method tm-both">only needed old Intel</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"amd_needs_emulated"</span><span class="tree-colon">:</span><span class="tree-val-bool">false</span><span class="tree-method tm-both">Ryzen = native too</span></div>
+      </div>
+
+      <div class="tree-row" onclick="toggleTree('display')">
+        <span class="tree-toggle" id="toggle-display">▶</span>
+        <span class="tree-key">"display_ports"</span><span class="tree-colon">:</span><span class="tree-val-null">{...}</span>
+      </div>
+      <div class="tree-children" id="display">
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"hdmi"</span><span class="tree-colon">:</span><span class="tree-val-bool">true</span><span class="tree-method tm-both">GPU cap lookup</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"displayport"</span><span class="tree-colon">:</span><span class="tree-val-bool">true</span><span class="tree-method tm-both">GPU cap lookup</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"igpu_headless"</span><span class="tree-colon">:</span><span class="tree-val-bool">true</span><span class="tree-method tm-both">dGPU present → iGPU disabled</span></div>
+        <div class="tree-row"><span class="tree-indent">  </span><span class="tree-toggle" style="visibility:hidden">▶</span><span class="tree-key">"imessage_ready"</span><span class="tree-colon">:</span><span class="tree-val-bool">false</span><span class="tree-method tm-both">needs proper MLB+ROM</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── HARDWARE SUPPORT MATRIX ─── -->
+<section class="section" id="hwsupport">
+  <div class="eyebrow">Support Matrix</div>
+  <h2 class="section-title">What hardware we target</h2>
+  <p class="section-sub">Phase 1 targets these combinations. Each unsupported item gets a clear error message explaining why, not a silent failure.</p>
+
+  <div class="cards-2 reveal" style="margin-bottom:16px;">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+      <div style="padding:12px 16px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:11px;font-weight:700;color:var(--white);">🖥 CPU Support</div>
+      <table class="hw-table">
+        <thead><tr><th>Model</th><th>Codename</th><th>Status</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Intel 8th–9th Gen</td><td>Coffee Lake / R</td><td><span class="support-badge sb-full">FULL</span></td><td>Best supported, very stable</td></tr>
+          <tr><td>Intel 10th Gen</td><td>Comet Lake</td><td><span class="support-badge sb-full">FULL</span></td><td>AppleXcpmExtraMsrs quirk needed</td></tr>
+          <tr><td>Intel 11th Gen</td><td>Rocket Lake</td><td><span class="support-badge sb-full">FULL</span></td><td>iGPU not supported in macOS</td></tr>
+          <tr><td>Intel 12th–14th Gen</td><td>Alder/Raptor Lake</td><td><span class="support-badge sb-full">FULL</span></td><td>Needs -wegnoigpu if dGPU present</td></tr>
+          <tr><td>AMD Ryzen 3000</td><td>Zen 2</td><td><span class="support-badge sb-full">FULL</span></td><td>AMD kernel patches required</td></tr>
+          <tr><td>AMD Ryzen 5000</td><td>Zen 3</td><td><span class="support-badge sb-full">FULL</span></td><td>Most popular AMD target</td></tr>
+          <tr><td>AMD Ryzen 7000</td><td>Zen 4</td><td><span class="support-badge sb-part">PARTIAL</span></td><td>AM5, needs extra patches</td></tr>
+          <tr><td>AMD Ryzen AI / 9000</td><td>Zen 5</td><td><span class="support-badge sb-none">NO</span></td><td>Too new, no working patches</td></tr>
+          <tr><td>Intel 6th–7th Gen</td><td>Skylake / Kaby Lake</td><td><span class="support-badge sb-dropped">DROPPED</span></td><td>Dropped in Sonoma 14.4+</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+      <div style="padding:12px 16px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:11px;font-weight:700;color:var(--white);">🎮 GPU Support</div>
+      <table class="hw-table">
+        <thead><tr><th>Model</th><th>Chip</th><th>Status</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>AMD RX 5000 series</td><td>Navi 10/14</td><td><span class="support-badge sb-full">FULL</span></td><td>WhateverGreen + boot-args</td></tr>
+          <tr><td>AMD RX 6000 series</td><td>Navi 21/22/23</td><td><span class="support-badge sb-full">FULL</span></td><td>Best macOS GPU support</td></tr>
+          <tr><td>AMD RX 7000 series</td><td>Navi 31/32/33</td><td><span class="support-badge sb-full">FULL</span></td><td>macOS Ventura+ only</td></tr>
+          <tr><td>AMD Vega 56/64</td><td>Vega 10</td><td><span class="support-badge sb-full">FULL</span></td><td>Legacy but still works</td></tr>
+          <tr><td>Intel UHD (iGPU)</td><td>UHD 630/770</td><td><span class="support-badge sb-part">PARTIAL</span></td><td>Works headless, display tricky</td></tr>
+          <tr><td>Nvidia RTX 20/30/40</td><td>Turing/Ampere/Ada</td><td><span class="support-badge sb-none">NO</span></td><td>No macOS driver, dropped post-Kepler</td></tr>
+          <tr><td>Nvidia GTX 900/1000</td><td>Maxwell/Pascal</td><td><span class="support-badge sb-none">NO</span></td><td>Dropped after macOS High Sierra</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="cards-2 reveal">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+      <div style="padding:12px 16px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:11px;font-weight:700;color:var(--white);">🌐 Ethernet + WiFi</div>
+      <table class="hw-table">
+        <thead><tr><th>Chip</th><th>Kext</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Intel I225-V / I226-V</td><td>IntelMausi.kext</td><td><span class="support-badge sb-full">FULL</span></td></tr>
+          <tr><td>Intel I219-V / I211</td><td>IntelMausi.kext</td><td><span class="support-badge sb-full">FULL</span></td></tr>
+          <tr><td>Realtek RTL8125 (2.5G)</td><td>LucyRTL8125.kext</td><td><span class="support-badge sb-full">FULL</span></td></tr>
+          <tr><td>Realtek RTL8168</td><td>RealtekRTL8111.kext</td><td><span class="support-badge sb-full">FULL</span></td></tr>
+          <tr><td>Broadcom BCM94360CS2</td><td>Native (natively supported)</td><td><span class="support-badge sb-full">FULL</span></td></tr>
+          <tr><td>Intel AX200 / AX210</td><td>AirportItlwm.kext</td><td><span class="support-badge sb-part">PARTIAL</span></td></tr>
+          <tr><td>Intel Wi-Fi 6E / 7</td><td>AirportItlwm.kext</td><td><span class="support-badge sb-part">PARTIAL</span></td></tr>
+          <tr><td>Mediatek / Realtek WiFi</td><td>—</td><td><span class="support-badge sb-none">NO</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+      <div style="padding:12px 16px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:11px;font-weight:700;color:var(--white);">🔊 Audio + Peripheral</div>
+      <table class="hw-table">
+        <thead><tr><th>Component</th><th>Solution</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Realtek ALC892/897</td><td>AppleALC + layout-id</td><td><span class="support-badge sb-full">FULL</span></td></tr>
+          <tr><td>Realtek ALC1220</td><td>AppleALC + layout-id</td><td><span class="support-badge sb-full">FULL</span></td></tr>
+          <tr><td>Realtek ALC4080</td><td>AppleALC + layout-id</td><td><span class="support-badge sb-full">FULL</span></td></tr>
+          <tr><td>USB Keyboard / Mouse</td><td>Native (no kext)</td><td><span class="support-badge sb-full">FULL</span></td></tr>
+          <tr><td>PS/2 Keyboard / Mouse</td><td>VoodooPS2.kext</td><td><span class="support-badge sb-full">FULL</span></td></tr>
+          <tr><td>USB 3.0 / 3.1 / 3.2</td><td>USBMap.kext (generated)</td><td><span class="support-badge sb-full">FULL</span></td></tr>
+          <tr><td>USB4 / Thunderbolt</td><td>Limited / board-specific</td><td><span class="support-badge sb-part">PARTIAL</span></td></tr>
+          <tr><td>Intel Bluetooth (BT5)</td><td>IntelBluetoothFirmware</td><td><span class="support-badge sb-part">PARTIAL</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ─── KEXT DATABASE ─── -->
+<section class="section" id="kexts">
+  <div class="eyebrow">Kext Database</div>
+  <h2 class="section-title">Every driver, what it does, when it's used</h2>
+  <p class="section-sub">Kexts are macOS kernel extensions — the drivers that make hackintosh hardware work. The tool auto-selects these based on the hardware scan. This is the full database.</p>
+
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;" class="reveal">
+    <div class="kext-row header">
+      <div class="kext-header-label">Kext Name</div>
+      <div class="kext-header-label">Purpose</div>
+      <div class="kext-header-label">When Used</div>
+      <div class="kext-header-label">Source</div>
+    </div>
+    <div class="kext-grid">
+      <div style="padding:8px 16px;background:var(--bg3);border-bottom:1px solid var(--border);"><span style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);">── Core / Always Required ──</span></div>
+      <div class="kext-row"><div class="kext-name">Lilu.kext<span class="sub">Acidanthera</span></div><div class="kext-desc">Kernel patching framework — required by almost all other kexts to work</div><div><span class="kext-req always">ALWAYS</span></div><div class="kext-source">GitHub/Acidanthera</div></div>
+      <div class="kext-row"><div class="kext-name">VirtualSMC.kext<span class="sub">Acidanthera</span></div><div class="kext-desc">Emulates Apple's SMC chip — absolutely required for macOS to boot</div><div><span class="kext-req always">ALWAYS</span></div><div class="kext-source">GitHub/Acidanthera</div></div>
+      <div class="kext-row"><div class="kext-name">WhateverGreen.kext<span class="sub">Acidanthera</span></div><div class="kext-desc">GPU patching — fixes display output, DRM, framebuffer on AMD and Intel GPUs</div><div><span class="kext-req always">ALWAYS</span></div><div class="kext-source">GitHub/Acidanthera</div></div>
+      <div class="kext-row"><div class="kext-name">AppleALC.kext<span class="sub">Acidanthera</span></div><div class="kext-desc">Audio driver — enables onboard Realtek/other HDA audio with correct layout-id</div><div><span class="kext-req always">ALWAYS</span></div><div class="kext-source">GitHub/Acidanthera</div></div>
+
+      <div style="padding:8px 16px;background:var(--bg3);border-bottom:1px solid var(--border);"><span style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);">── Intel CPU Specific ──</span></div>
+      <div class="kext-row"><div class="kext-name">CpuTscSync.kext<span class="sub">Acidanthera</span></div><div class="kext-desc">Fixes TSC synchronization — needed on Intel HEDT and multi-socket systems</div><div><span class="kext-req intel">INTEL HEDT</span></div><div class="kext-source">GitHub/Acidanthera</div></div>
+      <div class="kext-row"><div class="kext-name">CPUFriend.kext<span class="sub">Acidanthera</span></div><div class="kext-desc">Power management tuning — adjusts CPU frequency scaling for hackintosh</div><div><span class="kext-req intel">INTEL OPT</span></div><div class="kext-source">GitHub/Acidanthera</div></div>
+      <div class="kext-row"><div class="kext-name">SMCProcessor.kext<span class="sub">Acidanthera</span></div><div class="kext-desc">Exposes Intel CPU temperature/voltage sensors to macOS</div><div><span class="kext-req intel">INTEL</span></div><div class="kext-source">With VirtualSMC</div></div>
+      <div class="kext-row"><div class="kext-name">SMCSuperIO.kext<span class="sub">Acidanthera</span></div><div class="kext-desc">Exposes motherboard SuperIO chip sensors (fan speed, voltages)</div><div><span class="kext-req intel">INTEL</span></div><div class="kext-source">With VirtualSMC</div></div>
+
+      <div style="padding:8px 16px;background:var(--bg3);border-bottom:1px solid var(--border);"><span style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);">── AMD CPU Specific ──</span></div>
+      <div class="kext-row"><div class="kext-name">AMDRyzenCPUPowerManagement<span class="sub">trulyspinach</span></div><div class="kext-desc">CPU power management for AMD Ryzen — sleep, idle power states</div><div><span class="kext-req amd">AMD</span></div><div class="kext-source">GitHub</div></div>
+      <div class="kext-row"><div class="kext-name">SMCAMDProcessor.kext<span class="sub">trulyspinach</span></div><div class="kext-desc">Exposes AMD CPU temperature and power draw sensors to macOS</div><div><span class="kext-req amd">AMD</span></div><div class="kext-source">GitHub</div></div>
+      <div class="kext-row"><div class="kext-name">AMD kernel patches<span class="sub">config.plist</span></div><div class="kext-desc">Not a kext — raw kernel patches in config.plist that allow macOS to run on AMD. Different per Zen gen.</div><div><span class="kext-req amd">AMD CRITICAL</span></div><div class="kext-source">AMD-OSX patches</div></div>
+
+      <div style="padding:8px 16px;background:var(--bg3);border-bottom:1px solid var(--border);"><span style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);">── Ethernet ──</span></div>
+      <div class="kext-row"><div class="kext-name">IntelMausi.kext<span class="sub">Mieze</span></div><div class="kext-desc">Intel I211, I217, I218, I219, I225, I226 Ethernet driver</div><div><span class="kext-req cond">IF INTEL ETH</span></div><div class="kext-source">GitHub/mist-devel</div></div>
+      <div class="kext-row"><div class="kext-name">LucyRTL8125.kext<span class="sub">Mieze</span></div><div class="kext-desc">Realtek RTL8125 2.5GbE driver — common on modern mid-range boards</div><div><span class="kext-req cond">IF RTL8125</span></div><div class="kext-source">GitHub/Mieze</div></div>
+      <div class="kext-row"><div class="kext-name">RealtekRTL8111.kext<span class="sub">Mieze</span></div><div class="kext-desc">Realtek RTL8111/8168 1GbE driver — very common on budget/older boards</div><div><span class="kext-req cond">IF RTL8111</span></div><div class="kext-source">GitHub/Mieze</div></div>
+
+      <div style="padding:8px 16px;background:var(--bg3);border-bottom:1px solid var(--border);"><span style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);">── WiFi + Bluetooth ──</span></div>
+      <div class="kext-row"><div class="kext-name">AirportItlwm.kext<span class="sub">OpenIntelWireless</span></div><div class="kext-desc">Intel WiFi driver — partial support (no AirDrop, limited handoff). Needs per-macOS version build.</div><div><span class="kext-req wifi">IF INTEL WIFI</span></div><div class="kext-source">GitHub/OpenIntelWireless</div></div>
+      <div class="kext-row"><div class="kext-name">IntelBluetoothFirmware.kext<span class="sub">OpenIntelWireless</span></div><div class="kext-desc">Intel Bluetooth firmware uploader — required for Intel BT to work in macOS</div><div><span class="kext-req wifi">IF INTEL BT</span></div><div class="kext-source">GitHub/OpenIntelWireless</div></div>
+      <div class="kext-row"><div class="kext-name">BlueToolFixup.kext<span class="sub">Acidanthera</span></div><div class="kext-desc">Fixes Bluetooth stack in macOS Monterey+ for non-Apple BT chips</div><div><span class="kext-req wifi">IF INTEL BT</span></div><div class="kext-source">GitHub/Acidanthera</div></div>
+
+      <div style="padding:8px 16px;background:var(--bg3);border-bottom:1px solid var(--border);"><span style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);">── USB + Input ──</span></div>
+      <div class="kext-row"><div class="kext-name">USBMap.kext<span class="sub">Generated</span></div><div class="kext-desc">Generated USB port map — macOS limits to 15 USB ports. Must be custom-built per motherboard model.</div><div><span class="kext-req always">ALWAYS</span></div><div class="kext-source">Generated by tool</div></div>
+      <div class="kext-row"><div class="kext-name">USBToolBox.kext<span class="sub">USBToolBox</span></div><div class="kext-desc">Companion to USBMap — provides the framework the USB map kext relies on</div><div><span class="kext-req always">ALWAYS</span></div><div class="kext-source">GitHub/USBToolBox</div></div>
+      <div class="kext-row"><div class="kext-name">VoodooPS2.kext<span class="sub">Acidanthera</span></div><div class="kext-desc">PS/2 keyboard and mouse driver — needed if the machine has a PS/2 port and uses it</div><div><span class="kext-req cond">IF PS/2</span></div><div class="kext-source">GitHub/Acidanthera</div></div>
+
+      <div style="padding:8px 16px;background:var(--bg3);border-bottom:1px solid var(--border);"><span style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);">── NVMe + Storage ──</span></div>
+      <div class="kext-row"><div class="kext-name">NVMeFix.kext<span class="sub">Acidanthera</span></div><div class="kext-desc">Fixes NVMe power management on non-Apple SSDs — prevents sleep/wake issues</div><div><span class="kext-req cond">IF NVME</span></div><div class="kext-source">GitHub/Acidanthera</div></div>
+      <div class="kext-row"><div class="kext-name">CtlnaAHCIPort.kext<span class="sub">dhinakg</span></div><div class="kext-desc">Fixes certain SATA controllers not detected by macOS natively</div><div><span class="kext-req cond">IF SATA ISSUE</span></div><div class="kext-source">GitHub</div></div>
+
+      <div style="padding:8px 16px;background:var(--bg3);border-bottom:1px solid var(--border);"><span style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);">── iServices (iMessage / FaceTime) ──</span></div>
+      <div class="kext-row"><div class="kext-name">SMBIOS + MLB + ROM<span class="sub">config.plist</span></div><div class="kext-desc">Not a kext — iMessage/FaceTime require valid SMBIOS model, MLB serial, and ROM (MAC address). Tool generates a valid unique set. User must not share these values.</div><div><span class="kext-req cond">iSERVICES</span></div><div class="kext-source">GenSMBIOS</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── BIOS CHECKLIST ─── -->
+<section class="section" id="bios">
+  <div class="eyebrow">BIOS Checklist</div>
+  <h2 class="section-title">BIOS settings required before install</h2>
+  <p class="section-sub">The tool will display this checklist to the user before creating the USB, and can detect Secure Boot status. Some of these settings don't exist on all boards — the tool notes that clearly.</p>
+
+  <div class="bios-grid reveal">
+    <div class="bios-group">
+      <div class="bios-group-title enable">✔ Must ENABLE</div>
+      <div class="bios-item"><span class="bios-check on">ON</span><div><div class="bios-setting">Above 4G Decoding</div><div class="bios-note">Required for AMD GPUs and large BARs. Critical for RX 5000+</div></div></div>
+      <div class="bios-item"><span class="bios-check on">ON</span><div><div class="bios-setting">Resizable BAR (ReBAR)</div><div class="bios-note">Optional but recommended on 12th gen+ Intel. Helps GPU performance.</div></div></div>
+      <div class="bios-item"><span class="bios-check on">ON</span><div><div class="bios-setting">EHCI/XHCI Hand-off</div><div class="bios-note">Ensures USB works correctly in OpenCore bootloader</div></div></div>
+      <div class="bios-item"><span class="bios-check on">ON</span><div><div class="bios-setting">OS Type: Other OS</div><div class="bios-note">Disables Windows-specific optimizations that break macOS</div></div></div>
+      <div class="bios-item"><span class="bios-check on">ON</span><div><div class="bios-setting">SATA Mode: AHCI</div><div class="bios-note">Must not be RAID or Intel RST. macOS has no RAID drivers.</div></div></div>
+    </div>
+    <div class="bios-group">
+      <div class="bios-group-title disable">✘ Must DISABLE</div>
+      <div class="bios-item"><span class="bios-check off">OFF</span><div><div class="bios-setting">Secure Boot</div><div class="bios-note">OpenCore is not signed by Microsoft — must be disabled</div></div></div>
+      <div class="bios-item"><span class="bios-check off">OFF</span><div><div class="bios-setting">Fast Boot</div><div class="bios-note">Skips USB initialization — OpenCore won't load from USB</div></div></div>
+      <div class="bios-item"><span class="bios-check off">OFF</span><div><div class="bios-setting">CSM (Compatibility Support Module)</div><div class="bios-note">Enables legacy BIOS mode — macOS requires pure UEFI</div></div></div>
+      <div class="bios-item"><span class="bios-check off">OFF</span><div><div class="bios-setting">Intel Platform Trust (PTT / fTPM)</div><div class="bios-note">Can cause iMessage/NVMe issues. Disable if present.</div></div></div>
+      <div class="bios-item"><span class="bios-check off">OFF</span><div><div class="bios-setting">Intel VT-d / AMD Vi (IOMMU)</div><div class="bios-note">Can cause issues unless DisableIoMapper is set in config.plist</div></div></div>
+      <div class="bios-item"><span class="bios-check off">OFF</span><div><div class="bios-setting">Intel SGX</div><div class="bios-note">Not supported in macOS, can cause boot issues</div></div></div>
+      <div class="bios-item"><span class="bios-check off">OFF</span><div><div class="bios-setting">CFG Lock (MSR 0xE2)</div><div class="bios-note">Critical for Intel — either unlock or apply AppleCpuPmCfgLock quirk</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PLATFORM COMPARISON ─── -->
+<section class="section" id="platform">
+  <div class="eyebrow">Platform Differences</div>
+  <h2 class="section-title">Windows vs Linux — every difference</h2>
+  <p class="section-sub">Core logic is identical. OS-specific plumbing is swapped. Platform is detected at startup and routes to the right implementation. Building on Kubuntu first is actually the smart move.</p>
+
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;" class="reveal" style="margin-bottom:20px;">
+    <table class="diff-table">
+      <thead><tr><th>Component</th><th>🪟 Windows</th><th>🐧 Linux (Kubuntu/Ubuntu)</th></tr></thead>
+      <tbody>
+        <tr><td>CPU Info</td><td><code>Win32_Processor</code> via WMI</td><td><code>/proc/cpuinfo</code> + <code>dmidecode -t 4</code></td></tr>
+        <tr><td>GPU Detection</td><td><code>Win32_VideoController</code> via WMI</td><td><code>lspci -vmm | grep -A5 VGA</code> + PCI ID DB</td></tr>
+        <tr><td>Motherboard</td><td><code>Win32_BaseBoard</code> via WMI</td><td><code>dmidecode -t baseboard</code> (needs sudo)</td></tr>
+        <tr><td>Audio Codec</td><td><code>Win32_SoundDevice</code> via WMI</td><td><code>cat /proc/asound/card*/codec#*</code> or <code>lspci</code></td></tr>
+        <tr><td>Ethernet Chip</td><td><code>Win32_NetworkAdapter</code> via WMI</td><td><code>lspci -n | grep 0200</code> → PCI vendor:device lookup</td></tr>
+        <tr><td>USB Controllers</td><td><code>Win32_USBController</code> via WMI</td><td><code>lspci -n | grep 0c03</code></td></tr>
+        <tr><td>Bluetooth</td><td><code>Win32_PnPEntity</code> via WMI</td><td><code>lsusb</code> + USB PCI class check</td></tr>
+        <tr><td>Storage / NVMe</td><td><code>Win32_DiskDrive</code> via WMI</td><td><code>lspci | grep 0108</code> + <code>lsblk</code></td></tr>
+        <tr><td>RAM</td><td><code>Win32_PhysicalMemory</code> via WMI</td><td><code>dmidecode -t memory</code> + <code>/proc/meminfo</code></td></tr>
+        <tr><td>Input (PS/2 check)</td><td><code>Win32_Keyboard</code> via WMI</td><td><code>lspci | grep 0901</code> + <code>ls /dev/input</code></td></tr>
+        <tr><td>USB format</td><td><code>diskpart</code> via subprocess</td><td><code>parted</code> + <code>mkfs.fat -F32</code> via subprocess</td></tr>
+        <tr><td>Write recovery img</td><td>Python <code>shutil.copy</code> to partition</td><td><code>dd if=BaseSystem.img of=/dev/sdX status=progress</code></td></tr>
+        <tr><td>Mount EFI partition</td><td><code>mountvol X: /S</code> or diskpart assign</td><td><code>mount /dev/sdX1 /mnt/efi</code> (needs sudo)</td></tr>
+        <tr><td>Packaging</td><td>PyInstaller → <code>.exe</code> (code-signed)</td><td>PyInstaller → <code>AppImage</code> or <code>.deb</code></td></tr>
+        <tr><td>Privilege escalation</td><td>UAC prompt at launch (Run as Admin)</td><td><code>pkexec</code> / <code>sudo</code> only at USB write step</td></tr>
+        <tr><td>GUI framework</td><td>CustomTkinter native</td><td>CustomTkinter needs <code>python3-tk</code> + Xwayland fix</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="code-block reveal">
+    <div class="code-block-header">
+      <span class="lang">python</span>
+      <span class="file">scanners/__init__.py</span>
+    </div>
+    <div class="code-pre">
+<span class="cc"># Platform router — runs at startup, routes to correct scanner</span>
+<span class="ck">import</span> platform
+<span class="ck">from</span> pathlib <span class="ck">import</span> Path
+
+<span class="ck">def</span> <span class="cf">get_scanner</span>():
+    os_name = platform.<span class="cf">system</span>()
+    <span class="ck">if</span> os_name == <span class="cv">"Windows"</span>:
+        <span class="ck">from</span> scanners.windows_scanner <span class="ck">import</span> WindowsScanner
+        <span class="ck">return</span> <span class="cf">WindowsScanner</span>()            <span class="cc"># uses wmi lib</span>
+    <span class="ck">elif</span> os_name == <span class="cv">"Linux"</span>:
+        <span class="ck">from</span> scanners.linux_scanner <span class="ck">import</span> LinuxScanner
+        <span class="ck">return</span> <span class="cf">LinuxScanner</span>()              <span class="cc"># uses lspci + dmidecode</span>
+    <span class="ck">else</span>:
+        <span class="ck">raise</span> <span class="cf">OSError</span>(<span class="cv">f"Unsupported: {os_name}"</span>)
+
+<span class="cc"># Both return identical hardware_profile dict — EFI generator sees no difference</span>
+scanner = <span class="cf">get_scanner</span>()
+profile = scanner.<span class="cf">scan</span>()   <span class="cc"># → hardware_profile.json</span>
+    </div>
+  </div>
+</section>
+
+<!-- ─── TECH STACK ─── -->
+<section class="section" id="stack">
+  <div class="eyebrow">Tech Stack</div>
+  <h2 class="section-title">Every tool and library</h2>
+  <p class="section-sub">One Python codebase, two platform backends, one packaged binary. No dependency install for the end user on either OS.</p>
+
+  <div class="stack-section reveal">
+    <div class="stack-item"><div class="stack-role">Language</div><div class="stack-tech">Python 3.11</div><div class="stack-why">Same codebase on Windows + Linux. Best ecosystem for WMI, plist, HTTP, file ops.</div><div class="stack-badges"><span class="tag v">core</span></div></div>
+    <div class="stack-item"><div class="stack-role">Win HW Scan</div><div class="stack-tech">wmi library</div><div class="stack-why">Python wrapper around Windows WMI. Queries Win32_* classes for all hardware info.</div><div class="stack-badges"><span class="tag b">windows only</span></div></div>
+    <div class="stack-item"><div class="stack-role">Linux HW Scan</div><div class="stack-tech">lspci + dmidecode</div><div class="stack-why">Standard Linux tools. lspci reads PCI bus, dmidecode reads DMI/BIOS tables. Called via subprocess.</div><div class="stack-badges"><span class="tag g">linux only</span></div></div>
+    <div class="stack-item"><div class="stack-role">PCI ID Database</div><div class="stack-tech">pciids (local JSON)</div><div class="stack-why">Bundled snapshot of pci.ids — maps PCI vendor:device codes to human-readable names. Updated periodically.</div><div class="stack-badges"><span class="tag v">both</span></div></div>
+    <div class="stack-item"><div class="stack-role">Config Generation</div><div class="stack-tech">plistlib</div><div class="stack-why">Python stdlib. Generates valid Apple .plist XML for config.plist. No external deps.</div><div class="stack-badges"><span class="tag v">both</span></div></div>
+    <div class="stack-item"><div class="stack-role">Compat Matrix</div><div class="stack-tech">JSON lookup tables</div><div class="stack-why">hardware_profile → kexts, quirks, SMBIOS, SSDTs. JSON file shipped with tool. Updatable without rebuild.</div><div class="stack-badges"><span class="tag v">both</span></div></div>
+    <div class="stack-item"><div class="stack-role">SSDT Generation</div><div class="stack-tech">Custom ACPI / iasl</div><div class="stack-why">Port SSDTTime logic for SSDT-PLUG, SSDT-EC, SSDT-USBX in Python. Compile with iasl bundled.</div><div class="stack-badges"><span class="tag v">both</span></div></div>
+    <div class="stack-item"><div class="stack-role">Downloads</div><div class="stack-tech">requests + tqdm</div><div class="stack-why">Fetch OpenCore + kexts from GitHub Releases API. macOS recovery from Apple CDN with progress bar.</div><div class="stack-badges"><span class="tag v">both</span></div></div>
+    <div class="stack-item"><div class="stack-role">Win USB Write</div><div class="stack-tech">diskpart + mountvol</div><div class="stack-why">Windows built-ins via subprocess. diskpart formats, mountvol gives access to EFI partition.</div><div class="stack-badges"><span class="tag b">windows only</span></div></div>
+    <div class="stack-item"><div class="stack-role">Linux USB Write</div><div class="stack-tech">dd + parted + mount</div><div class="stack-why">dd for image write, parted for partition layout, mount for EFI. sudo only at write step via pkexec.</div><div class="stack-badges"><span class="tag g">linux only</span></div></div>
+    <div class="stack-item"><div class="stack-role">GUI</div><div class="stack-tech">CustomTkinter</div><div class="stack-why">Modern dark UI. Works on Windows + KDE/GNOME. Needs python3-tk on Linux. Ships in bundle.</div><div class="stack-badges"><span class="tag v">both</span></div></div>
+    <div class="stack-item"><div class="stack-role">Win Package</div><div class="stack-tech">PyInstaller → .exe</div><div class="stack-why">Single self-contained .exe, no Python install needed. Code-signed to avoid AV false positives.</div><div class="stack-badges"><span class="tag b">windows only</span></div></div>
+    <div class="stack-item"><div class="stack-role">Linux Package</div><div class="stack-tech">PyInstaller → AppImage</div><div class="stack-why">AppImage runs on any Ubuntu/Debian without install. Alternative: .deb for apt install.</div><div class="stack-badges"><span class="tag g">linux only</span></div></div>
+    <div class="stack-item"><div class="stack-role">SMBIOS Gen</div><div class="stack-tech">GenSMBIOS logic</div><div class="stack-why">Port of GenSMBIOS to Python. Generates valid MLB, SystemSerialNumber, ROM for iServices.</div><div class="stack-badges"><span class="tag v">both</span></div></div>
+  </div>
+</section>
+
+<!-- ─── FILE STRUCTURE ─── -->
+<section class="section" id="structure">
+  <div class="eyebrow">File Structure</div>
+  <h2 class="section-title">Project layout</h2>
+  <p class="section-sub">Clean separation between platform code and shared logic. The <code>core/</code> module has zero OS-specific imports.</p>
+
+  <div class="file-tree reveal">
+<span class="ft-dir">hackinstall/</span>
+<span class="ft-indent">│</span>
+<span class="ft-indent">├── </span><span class="ft-py">main.py</span>              <span class="ft-comment">  # entry point, platform detection, GUI launch</span>
+<span class="ft-indent">├── </span><span class="ft-json">requirements.txt</span>     <span class="ft-comment">  # Python deps</span>
+<span class="ft-indent">├── </span><span class="ft-json">build.sh</span>             <span class="ft-comment">  # PyInstaller build script (Linux)</span>
+<span class="ft-indent">├── </span><span class="ft-json">build.bat</span>            <span class="ft-comment">  # PyInstaller build script (Windows)</span>
+<span class="ft-indent">│</span>
+<span class="ft-indent">├── </span><span class="ft-dir">core/</span>                <span class="ft-comment">  # ← zero OS-specific code here</span>
+<span class="ft-indent">│   ├── </span><span class="ft-py">config_generator.py</span> <span class="ft-comment"> # builds config.plist from profile</span>
+<span class="ft-indent">│   ├── </span><span class="ft-py">kext_selector.py</span>     <span class="ft-comment"> # maps hardware → kext list</span>
+<span class="ft-indent">│   ├── </span><span class="ft-py">ssdt_builder.py</span>      <span class="ft-comment"> # generates SSDT-PLUG, EC, USBX</span>
+<span class="ft-indent">│   ├── </span><span class="ft-py">smbios_gen.py</span>        <span class="ft-comment"> # generates MLB, serial, ROM</span>
+<span class="ft-indent">│   ├── </span><span class="ft-py">downloader.py</span>        <span class="ft-comment"> # GitHub + Apple CDN downloads</span>
+<span class="ft-indent">│   └── </span><span class="ft-py">validator.py</span>         <span class="ft-comment"> # verifies USB after creation</span>
+<span class="ft-indent">│</span>
+<span class="ft-indent">├── </span><span class="ft-dir">scanners/</span>
+<span class="ft-indent">│   ├── </span><span class="ft-py">__init__.py</span>          <span class="ft-comment"> # platform router → get_scanner()</span>
+<span class="ft-indent">│   ├── </span><span class="ft-py">base_scanner.py</span>      <span class="ft-comment"> # abstract base class</span>
+<span class="ft-indent">│   ├── </span><span class="ft-py">windows_scanner.py</span>   <span class="ft-comment"> # WMI implementation</span>
+<span class="ft-indent">│   └── </span><span class="ft-py">linux_scanner.py</span>     <span class="ft-comment"> # lspci + dmidecode implementation</span>
+<span class="ft-indent">│</span>
+<span class="ft-indent">├── </span><span class="ft-dir">usb/</span>
+<span class="ft-indent">│   ├── </span><span class="ft-py">__init__.py</span>          <span class="ft-comment"> # USB platform router</span>
+<span class="ft-indent">│   ├── </span><span class="ft-py">windows_usb.py</span>       <span class="ft-comment"> # diskpart + mountvol implementation</span>
+<span class="ft-indent">│   └── </span><span class="ft-py">linux_usb.py</span>         <span class="ft-comment"> # dd + parted + mount implementation</span>
+<span class="ft-indent">│</span>
+<span class="ft-indent">├── </span><span class="ft-dir">gui/</span>
+<span class="ft-indent">│   ├── </span><span class="ft-py">app.py</span>               <span class="ft-comment"> # CustomTkinter main window</span>
+<span class="ft-indent">│   ├── </span><span class="ft-py">scan_view.py</span>         <span class="ft-comment"> # hardware detection screen</span>
+<span class="ft-indent">│   ├── </span><span class="ft-py">config_view.py</span>       <span class="ft-comment"> # EFI config review screen</span>
+<span class="ft-indent">│   ├── </span><span class="ft-py">usb_view.py</span>          <span class="ft-comment"> # USB creation + progress screen</span>
+<span class="ft-indent">│   └── </span><span class="ft-py">result_view.py</span>       <span class="ft-comment"> # success / error + BIOS guide</span>
+<span class="ft-indent">│</span>
+<span class="ft-indent">└── </span><span class="ft-dir">data/</span>
+<span class="ft-indent">    ├── </span><span class="ft-json">compat_matrix.json</span>   <span class="ft-comment"> # hardware → kexts + config quirks</span>
+<span class="ft-indent">    ├── </span><span class="ft-json">pci_ids.json</span>         <span class="ft-comment"> # vendor:device → chip name DB</span>
+<span class="ft-indent">    ├── </span><span class="ft-json">macos_versions.json</span>  <span class="ft-comment"> # macOS version → Apple CDN URL</span>
+<span class="ft-indent">    ├── </span><span class="ft-json">smbios_models.json</span>   <span class="ft-comment"> # CPU → best Mac model for SMBIOS</span>
+<span class="ft-indent">    ├── </span><span class="ft-json">audio_layouts.json</span>   <span class="ft-comment"> # codec → AppleALC layout-id</span>
+<span class="ft-indent">    └── </span><span class="ft-dir">ssdt_templates/</span>      <span class="ft-comment"> # base SSDT-PLUG, EC, USBX .aml</span>
+  </div>
+</section>
+
+<!-- ─── ROADMAP ─── -->
+<section class="section" id="roadmap">
+  <div class="eyebrow">Roadmap</div>
+  <h2 class="section-title">Build phases</h2>
+  <p class="section-sub">Start on Kubuntu. Phase 1 is entirely testable on your own machine. Each phase produces something that works end-to-end.</p>
+
+  <div class="phases">
+    <div class="phase reveal">
+      <div class="phase-stripe p1"><div class="phase-n p1">PHASE 1</div><div class="phase-weeks">Week 1–2</div></div>
+      <div class="phase-body">
+        <div class="phase-title">Deep Hardware Scanner</div>
+        <div class="phase-desc">Build both <code>linux_scanner.py</code> (lspci + dmidecode) and <code>windows_scanner.py</code> (WMI). Both output identical <code>hardware_profile.json</code>. Test Linux version on your Kubuntu machine immediately. Build the PCI ID database lookup. Add CLI mode: <code>python main.py --scan --output profile.json</code>. Validate on 5+ different machines.</div>
+        <div class="tags"><span class="tag g">linux_scanner.py</span><span class="tag b">windows_scanner.py</span><span class="tag v">hardware_profile.json</span><span class="tag v">pci_ids.json</span><span class="tag v">CLI test mode</span><span class="tag v">base_scanner.py</span></div>
+      </div>
+    </div>
+    <div class="phase reveal">
+      <div class="phase-stripe p2"><div class="phase-n p2">PHASE 2</div><div class="phase-weeks">Week 3–5</div></div>
+      <div class="phase-body">
+        <div class="phase-title">EFI Config Generator</div>
+        <div class="phase-desc">Build the compatibility matrix, kext selector, config.plist generator, SSDT builder, and SMBIOS generator. Pull OpenCore + kexts from GitHub Releases API. Test generated EFIs in a VM (QEMU on Linux) before real hardware. The hardest phase — every wrong value = won't boot.</div>
+        <div class="tags"><span class="tag c">compat_matrix.json</span><span class="tag c">config_generator.py</span><span class="tag c">kext_selector.py</span><span class="tag c">ssdt_builder.py</span><span class="tag c">smbios_gen.py</span><span class="tag c">downloader.py</span></div>
+      </div>
+    </div>
+    <div class="phase reveal">
+      <div class="phase-stripe p3"><div class="phase-n p3">PHASE 3</div><div class="phase-weeks">Week 6–7</div></div>
+      <div class="phase-body">
+        <div class="phase-title">USB Creator</div>
+        <div class="phase-desc">Build Linux USB writer first (dd + parted + mount), test it on your Kubuntu machine. Then build Windows version (diskpart). Integrate macOS recovery download from Apple CDN. Add USB validator that checks EFI integrity after write. Never auto-select the USB device on Linux — always confirm with user.</div>
+        <div class="tags"><span class="tag g">linux_usb.py</span><span class="tag b">windows_usb.py</span><span class="tag g">macos_downloader.py</span><span class="tag g">validator.py</span><span class="tag g">BIOS checklist display</span></div>
+      </div>
+    </div>
+    <div class="phase reveal">
+      <div class="phase-stripe p4"><div class="phase-n p4">PHASE 4</div><div class="phase-weeks">Week 8–10</div></div>
+      <div class="phase-body">
+        <div class="phase-title">GUI + Polish + Release</div>
+        <div class="phase-desc">Wrap everything in CustomTkinter. 4 screens: Scan Results → EFI Review → USB Creation (with progress) → Done (with BIOS guide). Package as AppImage for Linux, .exe for Windows. Beta test with community. Set up GitHub repo with issue templates for hardware reports.</div>
+        <div class="tags"><span class="tag a">CustomTkinter GUI</span><span class="tag a">4-screen flow</span><span class="tag g">AppImage (Linux)</span><span class="tag b">.exe (Windows)</span><span class="tag a">GitHub release</span><span class="tag a">community beta</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── RISKS ─── -->
+<section class="section" id="risks">
+  <div class="eyebrow">Risk Register</div>
+  <h2 class="section-title">What can go wrong</h2>
+  <p class="section-sub">Every risk has a mitigation baked into the build plan. No surprises.</p>
+
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;" class="reveal">
+    <table class="risk-table">
+      <thead><tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr></thead>
+      <tbody>
+        <tr><td>config.plist wrong value → machine won't boot</td><td><span class="sev H">HIGH</span></td><td>Test every template on real hardware. Start with 10 most common boards only. Ship OC debug mode enabled by default so boot logs are visible.</td></tr>
+        <tr><td>AMD kernel patches differ per Zen gen</td><td><span class="sev H">HIGH</span></td><td>Versioned patch table per Zen 2/3/4. Detect Ryzen generation precisely from CPU model string. Test each separately before merging.</td></tr>
+        <tr><td>Linux: dd writes to wrong disk (data loss)</td><td><span class="sev H">HIGH</span></td><td>Show device name + size + label. Require user to type device name to confirm. Never auto-select. Add "are you sure?" dialog with red warning text.</td></tr>
+        <tr><td>Intel I225/I226 Ethernet quirks</td><td><span class="sev H">HIGH</span></td><td>Known fix: apply <code>e1000LegacySupport</code> patch in config.plist. Detect I225/I226 by PCI ID and auto-apply.</td></tr>
+        <tr><td>USB port count exceeds macOS limit of 15</td><td><span class="sev H">HIGH</span></td><td>Generate a USBMap.kext for common board models. For unknown boards, enable XhciPortLimit quirk with clear warning that a proper USB map is needed post-install.</td></tr>
+        <tr><td>Apple changes macOS recovery CDN URLs</td><td><span class="sev M">MED</span></td><td>Mirror macrecovery.py URL logic. Add self-update for URL list via GitHub Gist. Alert user if download fails.</td></tr>
+        <tr><td>OpenCore release breaks existing configs</td><td><span class="sev M">MED</span></td><td>Pin OC version per macOS version in compat_matrix.json. Don't auto-update OC; require explicit version bump in matrix.</td></tr>
+        <tr><td>Non-standard ACPI on exotic motherboards</td><td><span class="sev M">MED</span></td><td>Scope to Z490/Z590/Z690/Z790/B650/X570/B550 only in v1. Flag unsupported boards clearly with a link to Dortania guide.</td></tr>
+        <tr><td>Windows AV flags the .exe as malware</td><td><span class="sev M">MED</span></td><td>Code-sign the binary. Publish full source on GitHub. Build community reputation. Submit to AV vendors for whitelisting.</td></tr>
+        <tr><td>iMessage/FaceTime requires valid SMBIOS</td><td><span class="sev M">MED</span></td><td>Generate unique MLB + serial + ROM using GenSMBIOS logic. Warn user these values are unique and must not be shared. Document post-install iServices setup.</td></tr>
+        <tr><td>Linux: CustomTkinter broken on Wayland</td><td><span class="sev M">MED</span></td><td>Detect <code>XDG_SESSION_TYPE</code>. Set <code>DISPLAY=:0</code> for Xwayland fallback. Add CLI-only mode as fallback if GUI fails.</td></tr>
+        <tr><td>Sleep/wake doesn't work post-install</td><td><span class="sev M">MED</span></td><td>Out of scope for tool — document known issues per platform. Generate SSDT-GPRW or SSDT-PTXH for common boards.</td></tr>
+        <tr><td>CFG Lock not unlockable on some boards</td><td><span class="sev M">MED</span></td><td>Detect Intel CPU + apply <code>AppleCpuPmCfgLock</code> and <code>AppleXcpmCfgLock</code> quirks as fallback. Document how to unlock via BIOS mod.</td></tr>
+        <tr><td>NVMe SSD not recognized (some Samsung/WD)</td><td><span class="sev L">LOW</span></td><td>Known models: detect by PCI vendor ID and auto-apply <code>SetApfsTrimTimeout</code> or NVMeFix.kext. Document known-bad models.</td></tr>
+        <tr><td>USB write fails (bad USB drive)</td><td><span class="sev L">LOW</span></td><td>Verify write with MD5 checksum. Clear error message. Recommend USB 3.0 drive, 16GB+. Retry option.</td></tr>
+        <tr><td>Linux: python3-tk not installed</td><td><span class="sev L">LOW</span></td><td>Detect at startup. Print exact install command and exit gracefully. <code>sudo apt install python3-tk</code>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="padding:48px 56px;text-align:center;border-top:1px solid var(--border);">
+  <p style="font-family:var(--mono);font-size:11px;color:var(--text-dim);letter-spacing:0.1em;">
+    HACKINSTALL — Full Blueprint <span style="color:var(--violet)">v2.0</span> — Windows + Kubuntu/Ubuntu — <span style="color:var(--green)">Python 3.11 · OpenCore 1.0.x</span>
+  </p>
+</footer>
+
+</div><!-- /main -->
+
+<script>
+// ── Sidebar active state on scroll ──
+const sections = document.querySelectorAll('[id]');
+const links = document.querySelectorAll('.sidebar a');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      links.forEach(l => l.classList.remove('active'));
+      const active = document.querySelector(`.sidebar a[href="#${entry.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { threshold: 0.3, rootMargin: '-10% 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+
+// ── Scroll reveal ──
+const reveals = document.querySelectorAll('.reveal');
+const ro = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 50);
+      ro.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.08 });
+reveals.forEach(el => ro.observe(el));
+
+// ── Pipeline stagger ──
+document.querySelectorAll('.pipe-card').forEach((c, i) => {
+  c.style.opacity = '0'; c.style.transform = 'translateY(10px)';
+  c.style.transition = 'opacity .4s ease, transform .4s ease, border-color .2s, box-shadow .2s';
+  setTimeout(() => { c.style.opacity = '1'; c.style.transform = 'none'; }, 300 + i * 100);
+});
+
+// ── Tree toggle ──
+function toggleTree(id) {
+  const children = document.getElementById(id);
+  const toggle = document.getElementById('toggle-' + id);
+  if (!children || !toggle) return;
+  const isOpen = children.classList.contains('open');
+  children.classList.toggle('open', !isOpen);
+  toggle.classList.toggle('open', !isOpen);
+  toggle.textContent = isOpen ? '▶' : '▼';
+}
+// Open CPU by default
+toggleTree('cpu');
+</script>
+</body>
+</html>
