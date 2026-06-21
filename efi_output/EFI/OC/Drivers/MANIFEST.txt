@@ -1,0 +1,4 @@
+# Expected UEFI drivers (from OpenCorePkg):
+# OpenRuntime.efi   — required for OC quirks
+# OpenHfsPlus.efi   — HFS+ filesystem
+# ResetNvramEntry.efi — picker entry to reset NVRAM

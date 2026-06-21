@@ -1,0 +1,202 @@
+{
+  "_comment": "SMBIOS model selection table. Maps (CPU vendor, generation, chassis_type) to the recommended Mac model identifier. Each model entry carries validation info needed by smbios_gen.py.",
+  "_version": "1.0.0",
+  "selection_rules": [
+    {
+      "match": {
+        "vendor": "intel",
+        "generation_gte": 12,
+        "chassis": "desktop"
+      },
+      "model": "iMacPro1,1"
+    },
+    {
+      "match": {
+        "vendor": "intel",
+        "generation_gte": 12,
+        "chassis": "laptop"
+      },
+      "model": "MacBookPro18,1"
+    },
+    {
+      "match": {
+        "vendor": "intel",
+        "generation_gte": 10,
+        "chassis": "desktop"
+      },
+      "model": "iMac21,1"
+    },
+    {
+      "match": {
+        "vendor": "intel",
+        "generation_gte": 10,
+        "chassis": "laptop"
+      },
+      "model": "MacBookPro17,1"
+    },
+    {
+      "match": {
+        "vendor": "intel",
+        "generation_gte": 8,
+        "chassis": "desktop"
+      },
+      "model": "iMac19,1"
+    },
+    {
+      "match": {
+        "vendor": "intel",
+        "generation_gte": 8,
+        "chassis": "laptop"
+      },
+      "model": "MacBookPro16,1"
+    },
+    {
+      "match": {
+        "vendor": "intel",
+        "generation_gte": 6,
+        "chassis": "desktop"
+      },
+      "model": "iMac18,3"
+    },
+    {
+      "match": {
+        "vendor": "intel",
+        "generation_gte": 6,
+        "chassis": "laptop"
+      },
+      "model": "MacBookPro14,1"
+    },
+    {
+      "match": {
+        "vendor": "amd",
+        "chassis": "desktop"
+      },
+      "model": "MacPro7,1"
+    },
+    {
+      "match": {
+        "vendor": "amd",
+        "chassis": "laptop"
+      },
+      "model": "MacBookPro16,3"
+    }
+  ],
+  "models": {
+    "iMacPro1,1": {
+      "board_model": "Mac-BE088AF8C5EB4FA2",
+      "smc_platform": "x86legacy",
+      "serial_prefix": [
+        "C02X",
+        "C02Y"
+      ],
+      "min_macos": "10.13",
+      "max_macos": "12",
+      "note": "iMac Pro - desktop SMBIOS for Intel 12th+ with dGPU (max macOS 12 Monterey)"
+    },
+    "iMac21,1": {
+      "board_model": "Mac-AF89B6D9451A490B",
+      "smc_platform": "x86legacy",
+      "serial_prefix": [
+        "C02F",
+        "C02G",
+        "C02D"
+      ],
+      "min_macos": "11",
+      "max_macos": "15",
+      "note": "Used for Intel Comet Lake desktops (10th gen)"
+    },
+    "iMac19,1": {
+      "board_model": "Mac-00BE6ED71E353861",
+      "smc_platform": "x86legacy",
+      "serial_prefix": [
+        "C02Z",
+        "C02X",
+        "C02V"
+      ],
+      "min_macos": "10.14",
+      "max_macos": "15",
+      "note": "Coffee Lake desktop SMBIOS - Intel 8th/9th gen desktop"
+    },
+    "iMac18,3": {
+      "board_model": "Mac-77F17D7DA9CBD13B",
+      "smc_platform": "x86legacy",
+      "serial_prefix": [
+        "C02V",
+        "C02T",
+        "C02W"
+      ],
+      "min_macos": "10.13",
+      "max_macos": "15",
+      "note": "Skylake/Kaby Lake desktop SMBIOS - Intel 6th/7th gen desktop"
+    },
+    "MacBookPro18,1": {
+      "board_model": "Mac-A61BADE1FAD87C83",
+      "smc_platform": "x86legacy",
+      "serial_prefix": [
+        "C02F",
+        "C02G"
+      ],
+      "min_macos": "12",
+      "max_macos": "15",
+      "note": "Used for Intel 12th+ laptops"
+    },
+    "MacBookPro17,1": {
+      "board_model": "Mac-AF89B6D9451A490B",
+      "smc_platform": "x86legacy",
+      "serial_prefix": [
+        "C02F",
+        "C02D"
+      ],
+      "min_macos": "12",
+      "max_macos": "15",
+      "note": "Used for Intel Comet Lake laptops (10th gen)"
+    },
+    "MacBookPro16,1": {
+      "board_model": "Mac-E1008331FDC968EC",
+      "smc_platform": "x86legacy",
+      "serial_prefix": [
+        "C02Z",
+        "C02C",
+        "C02X"
+      ],
+      "min_macos": "10.15",
+      "max_macos": "15",
+      "note": "Coffee Lake/Comet Lake laptop SMBIOS - Intel 8th-10th gen laptop"
+    },
+    "MacBookPro14,1": {
+      "board_model": "Mac-B4831AFBD4F8554A",
+      "smc_platform": "x86legacy",
+      "serial_prefix": [
+        "C02V",
+        "C02T",
+        "C02Y"
+      ],
+      "min_macos": "10.12.1",
+      "max_macos": "15",
+      "note": "Kaby Lake laptop SMBIOS - Intel 6th/7th gen laptop"
+    },
+    "MacPro7,1": {
+      "board_model": "Mac-27AD2F918AE68F61",
+      "smc_platform": "x86legacy",
+      "serial_prefix": [
+        "F5KC",
+        "F7LK",
+        "F7LM"
+      ],
+      "min_macos": "10.15",
+      "max_macos": "15",
+      "note": "Mac Pro 2019 - standard AMD Ryzen desktop SMBIOS"
+    },
+    "MacBookPro16,3": {
+      "board_model": "Mac-E1008331FDC968EC",
+      "smc_platform": "x86legacy",
+      "serial_prefix": [
+        "C02Z",
+        "C02C"
+      ],
+      "min_macos": "10.15",
+      "max_macos": "15",
+      "note": "Used for AMD Ryzen laptops (no real Apple AMD laptop)"
+    }
+  }
+}

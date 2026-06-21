@@ -1,0 +1,9 @@
+# Expected kexts (download by Phase 3), in load order:
+# Lilu.kext v1.6.5  — Kernel patching framework — required by almost all other kexts
+# VirtualSMC.kext v1.3.4  — Emulates Apple's SMC chip — required for macOS to boot
+# SMCProcessor.kext v1.3.4  — Intel CPU temperature sensors (VirtualSMC plugin)
+# SMCSuperIO.kext v1.3.4  — Motherboard fan/voltage sensors (VirtualSMC plugin)
+# WhateverGreen.kext v1.6.9  — Intel iGPU patching
+# AppleALC.kext v1.9.2  — Audio: Realtek ALC3235, layout-id 28
+# IntelMausi.kext v1.0.7  — Ethernet: Ethernet Connection I219-LM
+# AirportItlwm.kext v2.2.0  — WiFi: Wireless 8260 (partial support)

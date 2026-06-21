@@ -1,0 +1,161 @@
+{
+  "plan_metadata": {
+    "generated_from": "hardware_profile.json",
+    "macos_target": "ventura",
+    "opencore_version": "1.0.3",
+    "decisions_version": "1.0.0-phase1",
+    "timestamp": "2026-06-21T18:10:44Z",
+    "hardware_summary": {
+      "cpu": "Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz",
+      "cpu_codename": "Skylake",
+      "cpu_microarch": "skylake",
+      "gpus": [
+        "Skylake-U GT2 [HD Graphics 520]"
+      ],
+      "board": "Dell Inc. 0VHKV0",
+      "chassis": "laptop"
+    }
+  },
+  "smbios": {
+    "system_product_name": "MacBookPro14,1",
+    "system_serial": "C02YAPT74HTX",
+    "mlb": "C02YAPT74HTXPTACT",
+    "system_uuid": "7BEAEA73-9D1D-421A-B9AD-C64F5097B322",
+    "rom": "02E7A36645FDF",
+    "board_model": "Mac-B4831AFBD4F8554A",
+    "smc_platform": "x86legacy",
+    "_note": "Format-valid serials. NOT verified against Apple's database — rare collisions possible. See config_notes."
+  },
+  "kexts": [
+    {
+      "id": "Lilu",
+      "version": "1.6.5",
+      "source": "Acidanthera",
+      "always": true,
+      "reason": "Kernel patching framework — required by almost all other kexts",
+      "bundle_path": "Lilu.kext/Contents/Info.plist"
+    },
+    {
+      "id": "VirtualSMC",
+      "version": "1.3.4",
+      "source": "Acidanthera",
+      "always": true,
+      "reason": "Emulates Apple's SMC chip — required for macOS to boot",
+      "bundle_path": "VirtualSMC.kext/Contents/Info.plist"
+    },
+    {
+      "id": "SMCProcessor",
+      "version": "1.3.4",
+      "source": "Acidanthera",
+      "reason": "Intel CPU temperature sensors (VirtualSMC plugin)",
+      "bundle_path": "SMCProcessor.kext/Contents/Info.plist"
+    },
+    {
+      "id": "SMCSuperIO",
+      "version": "1.3.4",
+      "source": "Acidanthera",
+      "reason": "Motherboard fan/voltage sensors (VirtualSMC plugin)",
+      "bundle_path": "SMCSuperIO.kext/Contents/Info.plist"
+    },
+    {
+      "id": "WhateverGreen",
+      "version": "1.6.9",
+      "source": "Acidanthera",
+      "reason": "Intel iGPU patching",
+      "bundle_path": "WhateverGreen.kext/Contents/Info.plist"
+    },
+    {
+      "id": "AppleALC",
+      "version": "1.9.2",
+      "source": "Acidanthera",
+      "reason": "Audio: Realtek ALC3235, layout-id 28",
+      "bundle_path": "AppleALC.kext/Contents/Info.plist"
+    },
+    {
+      "id": "IntelMausi",
+      "version": "1.0.7",
+      "source": "Intel",
+      "reason": "Ethernet: Ethernet Connection I219-LM",
+      "bundle_path": "IntelMausi.kext/Contents/Info.plist"
+    },
+    {
+      "id": "AirportItlwm",
+      "version": "2.2.0",
+      "source": "OpenIntelWireless",
+      "reason": "WiFi: Wireless 8260 (partial support)",
+      "bundle_path": "AirportItlwm.kext/Contents/Info.plist"
+    }
+  ],
+  "boot_args": {
+    "debug": "-v keepsyms=1 debug=0x100",
+    "release": "-v igfxfw=2",
+    "active": "debug"
+  },
+  "quirks": {
+    "Kernel": {
+      "AppleXcpmExtraMsrs": false,
+      "AppleCpuPmCfgLock": false,
+      "AppleXcpmCfgLock": false,
+      "DisableIoMapper": false,
+      "PanicNoKextDump": true,
+      "PowerTimeoutKernelPanic": true
+    },
+    "Booter": {
+      "AvoidRuntimeDefrag": true,
+      "EnableSafeModeSlide": true,
+      "ProvideCustomSlide": true,
+      "RebuildAppleMemoryMap": true,
+      "SyncRuntimePermissions": true,
+      "SetupVirtualMap": true
+    },
+    "UEFI": {
+      "ConnectDrivers": true
+    }
+  },
+  "ssdts": [
+    {
+      "name": "SSDT-PLUG",
+      "reason": "Defines CPU power management (plugin-type=1)",
+      "source": "bundled",
+      "when": "always"
+    },
+    {
+      "name": "SSDT-EC-USBX",
+      "reason": "Fake Embedded Controller + USB power properties",
+      "source": "bundled",
+      "when": "always"
+    },
+    {
+      "name": "SSDT-GPIO",
+      "reason": "GPIO controller for PS/2 trackpad/VoodooI2C",
+      "source": "bundled",
+      "when": "always (laptop)"
+    },
+    {
+      "name": "SSDT-PNLF",
+      "reason": "Backlight control for laptop panels",
+      "source": "bundled",
+      "when": "always (laptop)"
+    }
+  ],
+  "acpi_patches": [],
+  "config_notes": [
+    "CPU 'Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz' (Skylake, gen 6) was dropped from recent macOS. Targeting Ventura (macOS 13) as the latest installable version.",
+    "GPU 'Skylake-U GT2 [HD Graphics 520]' was dropped from recent macOS — target will be constrained to Ventura (macOS 13).",
+    "Kernel quirks for intel/skylake: AppleXcpmCfgLock=False, DisableIoMapper=False.",
+    "Booter quirks: 6 entries for intel.",
+    "GPU boot-args: igfxfw=2 (applied via WhateverGreen).",
+    "SMBIOS model: MacBookPro14,1 (board Mac-B4831AFBD4F8554A). Serial/MLB are format-valid but NOT verified against Apple's database."
+  ],
+  "blockers": [],
+  "warnings": [
+    {
+      "field": "wireless.wifi",
+      "reason": "Intel WiFi has only partial macOS support (no AirDrop, limited handoff)."
+    },
+    {
+      "field": "smbios.serial",
+      "reason": "Generated serial is format-valid but may collide with a real Mac. Verify at https://checkcoverage.apple.com before iServices setup — it should return 'invalid' (meaning unused)."
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "_comment": "HackInstall compatibility matrix — the rules database for Phase 2. Maps hardware (CPU microarch, GPU PCI family, audio codec, etc.) to the OpenCore quirks, boot-args, kexts, and SSDTs needed to boot macOS. This is where Dortania community knowledge is encoded as DATA, not code. Adding a new CPU generation = add a JSON entry, not a Python change. See BUILDPLAN.md for how these flow into the BuildPlan.",
+  "_version": "1.0.0",
+  "_opencore_pin": "1.0.3",
+
+  "macos_targets": {
+    "ventura":  { "version": "13",   "codename": "Ventura",  "min_cpu_note": "Intel 8th+ for full; older works with dropped CPU patches" },
+    "sonoma":   { "version": "14",   "codename": "Sonoma",   "min_cpu_note": "Intel 8th+ (Skylake/Kaby Lake DROPPED in 14.4+)" },
+    "sequoia":  { "version": "15",   "codename": "Sequoia",  "min_cpu_note": "Intel 8th+ recommended" }
+  },
+
+  "kernel_quirks_by_microarch": {
+    "intel": {
+      "haswell":      { "AppleXcpmExtraMsrs": false, "AppleCpuPmCfgLock": false, "AppleXcpmCfgLock": false },
+      "broadwell":    { "AppleXcpmExtraMsrs": false, "AppleCpuPmCfgLock": false, "AppleXcpmCfgLock": false },
+      "skylake":      { "AppleXcpmExtraMsrs": false, "AppleCpuPmCfgLock": false, "AppleXcpmCfgLock": false },
+      "kaby_lake":    { "AppleXcpmExtraMsrs": false, "AppleCpuPmCfgLock": false, "AppleXcpmCfgLock": false },
+      "coffee_lake":  { "AppleXcpmExtraMsrs": false, "AppleCpuPmCfgLock": false, "AppleXcpmCfgLock": false },
+      "comet_lake":   { "AppleXcpmExtraMsrs": false, "AppleCpuPmCfgLock": false, "AppleXcpmCfgLock": false },
+      "rocket_lake":  { "AppleXcpmExtraMsrs": false, "AppleCpuPmCfgLock": false, "AppleXcpmCfgLock": false },
+      "alder_lake":   { "AppleXcpmExtraMsrs": false, "AppleCpuPmCfgLock": false, "AppleXcpmCfgLock": false },
+      "raptor_lake":  { "AppleXcpmExtraMsrs": false, "AppleCpuPmCfgLock": false, "AppleXcpmCfgLock": false }
+    },
+    "amd": {
+      "zen1": { "AppleXcpmExtraMsrs": false, "AppleCpuPmCfgLock": false, "AppleXcpmCfgLock": false },
+      "zen2": { "AppleXcpmExtraMsrs": false, "AppleCpuPmCfgLock": false, "AppleXcpmCfgLock": false },
+      "zen3": { "AppleXcpmExtraMsrs": false, "AppleCpuPmCfgLock": false, "AppleXcpmCfgLock": false },
+      "zen4": { "AppleXcpmExtraMsrs": false, "AppleCpuPmCfgLock": false, "AppleXcpmCfgLock": false }
+    }
+  },
+
+  "booter_quirks_by_cpu": {
+    "_comment": "Booter quirks are nearly universal for UEFI desktops/laptops. Differentiated only by AMD vs Intel.",
+    "intel": {
+      "AvoidRuntimeDefrag": true, "EnableSafeModeSlide": true, "ProvideCustomSlide": true,
+      "RebuildAppleMemoryMap": true, "SyncRuntimePermissions": true, "SetupVirtualMap": true
+    },
+    "amd": {
+      "AvoidRuntimeDefrag": true, "EnableSafeModeSlide": true, "ProvideCustomSlide": true,
+      "RebuildAppleMemoryMap": true, "SyncRuntimePermissions": true, "SetupVirtualMap": false,
+      "_amd_note": "AMD drops SetupVirtualMap because Zen memory map is already virtual"
+    }
+  },
+
+  "boot_args_by_gpu": {
+    "_comment": "GPU-specific boot-args appended to the base '-v'. Applied via WhateverGreen.",
+    "intel_igpu": {
+      "skylake":      "igfxfw=2",
+      "kaby_lake":    "igfxfw=2",
+      "coffee_lake":  "igfxfw=2",
+      "comet_lake":   "igfxfw=2",
+      "alder_lake":   "-wegnoegpu",
+      "raptor_lake":  "-wegnoegpu"
+    },
+    "amd_navi":     "agdpmod=pikera",
+    "amd_navi3":    "agdpmod=pikera",
+    "amd_polaris":  "agdpmod=pikera",
+    "amd_vega":     "agdpmod=pikera",
+    "_nvidia_note": "Nvidia Turing+ has no macOS driver. Tool blocks installation, not a boot-arg issue."
+  },
+
+  "kexts_core": [
+    { "id": "Lilu",          "version": "1.6.5",  "source": "Acidanthera", "always": true,  "reason": "Kernel patching framework — required by almost all other kexts" },
+    { "id": "VirtualSMC",    "version": "1.3.4",  "source": "Acidanthera", "always": true,  "reason": "Emulates Apple's SMC chip — required for macOS to boot" }
+  ],
+
+  "kexts_by_cpu": {
+    "intel": {
+      "_comment": "Intel CPU-specific kexts. SMCProcessor + SMCSuperIO are VirtualSMC plugins.",
+      "always": [
+        { "id": "SMCProcessor", "version": "1.3.4", "source": "Acidanthera", "reason": "Intel CPU temperature sensors (VirtualSMC plugin)" },
+        { "id": "SMCSuperIO",   "version": "1.3.4", "source": "Acidanthera", "reason": "Motherboard fan/voltage sensors (VirtualSMC plugin)" }
+      ],
+      "hedt": [
+        { "id": "CpuTscSync", "version": "1.0.5", "source": "Acidanthera", "reason": "TSC sync fix for Intel HEDT / multi-socket" }
+      ]
+    },
+    "amd": {
+      "always": [
+        { "id": "SMCAMDProcessor",          "version": "0.8.1", "source": "trulyspinach", "reason": "AMD Ryzen CPU temperature sensors" },
+        { "id": "AMDRyzenCPUPowerManagement","version": "0.8.1", "source": "trulyspinach", "reason": "AMD Ryzen power management / sleep states" }
+      ]
+      }
+  },
+
+  "kexts_by_gpu": {
+    "_comment": "GPU kexts. WhateverGreen is required for all Intel/AMD GPUs. Specific boot-args handle framebuffers.",
+    "intel": [
+      { "id": "WhateverGreen", "version": "1.6.9", "source": "Acidanthera", "reason": "Intel iGPU patching" }
+    ],
+    "amd": [
+      { "id": "WhateverGreen", "version": "1.6.9", "source": "Acidanthera", "reason": "AMD dGPU patching" }
+    ],
+    "nvidia_dropped": [
+      { "id": "WhateverGreen", "version": "1.6.9", "source": "Acidanthera", "rules": "only if Intel iGPU also present", "reason": "Nvidia dGPU unsupported; iGPU patching only" }
+    ]
+  },
+
+  "ssdts_by_cpu": {
+    "intel": [
+      { "name": "SSDT-PLUG",    "when": "always", "source": "bundled", "reason": "Defines CPU power management (plugin-type=1)" },
+      { "name": "SSDT-EC-USBX", "when": "always", "source": "bundled", "reason": "Fake Embedded Controller + USB power properties" }
+    ],
+    "amd": [
+      { "name": "SSDT-PLUG",    "when": "always", "source": "bundled", "reason": "CPU power management" },
+      { "name": "SSDT-EC-USBX", "when": "always", "source": "bundled", "reason": "Fake EC + USB power" }
+    ]
+  },
+
+  "ssdts_by_chassis": {
+    "laptop": [
+      { "name": "SSDT-GPIO",  "when": "always (laptop)", "source": "bundled", "reason": "GPIO controller for PS/2 trackpad/VoodooI2C" },
+      { "name": "SSDT-PNLF",  "when": "always (laptop)", "source": "bundled", "reason": "Backlight control for laptop panels" }
+    ],
+    "desktop": []
+  },
+
+  "ssdts_optional": [
+    { "name": "SSDT-AWAC",  "when": "Intel 300-series chipset+ (B360/Z390+)", "source": "bundled", "reason": "Fixes AWAC clock on modern boards — RTC fake" },
+    { "name": "SSDT-RHUB",  "when": "Intel 400-series+ (Z490+)", "source": "bundled", "reason": "Removes USB root hub to avoid port enumeration issues" }
+  ],
+
+  "nvram_defaults": {
+    "_comment": "Default nvram vars written by OpenCore for macOS.",
+    "boot-args": "-v",
+    "csr-active-config": "00000000",
+    "prev-lang:kbd": "656e2d55533a30"
+  },
+
+  "amd_kernel_patches": {
+    "_comment": "AMD OSX / Algrey kernel patches. Without these, macOS kernel panics on cpuid_set_info at boot. One table per Zen family (17h vs 19h). Each patch entry maps directly to an OpenCore Kernel.Patch dict. NOTE: the actual Base/Find/Replace byte sequences are large (200+ bytes each) — bundled as separate .patch files in data/amd_patches/ and loaded by name at generation time. Phase 2 references them by file; the bytes are injected by config_generator.",
+    "by_zen": {
+      "zen1":  { "patches_file": "algrey_17h_all.pat",   "algrey_v": "15h_17h", "note": "Ryzen 1000/2000 (Zen 1/Zen+)" },
+      "zen2":  { "patches_file": "algrey_17h_all.pat",   "algrey_v": "15h_17h", "note": "Ryzen 3000 (Zen 2)" },
+      "zen3":  { "patches_file": "algrey_17h_all.pat",   "algrey_v": "15h_17h", "note": "Ryzen 5000 (Zen 3)" },
+      "zen4":  { "patches_file": "algrey_19h_all.pat",   "algrey_v": "17h_19h", "note": "Ryzen 7000 (Zen 4)" }
+    }
+  },
+
+  "opencore_sections_order": [
+    "ACPI", "Booter", "DeviceProperties", "Kernel", "Misc", "NVRAM", "PlatformInfo", "UEFI"
+  ]
+}

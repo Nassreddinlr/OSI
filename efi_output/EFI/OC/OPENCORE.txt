@@ -1,0 +1,2 @@
+# Place OpenCore.efi here (Phase 3 downloads from GitHub Releases).
+# Target version: OpenCore 1.0.3

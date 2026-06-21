@@ -199,10 +199,114 @@ def cmd_schema(_: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_generate(args: argparse.Namespace) -> int:
+    """Generate an EFI config from a hardware_profile.json."""
+    # Lazy import so 'scan'/'schema' don't pull in the Phase 2 chain.
+    from .core import efi_builder
+    from .core.exceptions import Blocker
+
+    profile_path = Path(args.profile)
+    if not profile_path.exists():
+        print(_red(f"✗ Hardware profile not found: {profile_path}"), file=sys.stderr)
+        print(_dim("    Run `hackinstall scan --output hardware_profile.json` first."),
+              file=sys.stderr)
+        return 2
+
+    try:
+        with profile_path.open(encoding="utf-8") as fh:
+            profile = json.load(fh)
+    except json.JSONDecodeError as exc:
+        print(_red(f"✗ Invalid JSON in {profile_path}: {exc}"), file=sys.stderr)
+        return 2
+
+    out_dir = Path(args.output)
+    print(_dim(f"  → Generating EFI from {profile_path.name} "
+               f"(target: {args.macos}) → {out_dir}/"))
+
+    try:
+        result = efi_builder.build_efi(
+            profile, out_dir, macos_target=args.macos
+        )
+    except Blocker as exc:
+        print(_red(f"✗ Blocked: {exc}"), file=sys.stderr)
+        return 3
+    except Exception as exc:  # noqa: BLE001
+        print(_red(f"✗ Generation failed: {exc}"), file=sys.stderr)
+        if args.verbose:
+            import traceback
+            print(_dim(traceback.format_exc()), file=sys.stderr)
+        return 1
+
+    # Report blockers discovered inside the plan (non-raising path).
+    if result.blockers:
+        print(_red(f"\n  ✗ {len(result.blockers)} blocker(s) — EFI not generated:"))
+        for b in result.blockers:
+            print(_red(f"    [{b.get('field','?')}] {b.get('reason','?')}"))
+        print(_dim(f"\n  See {result.plan_path} for the full decision log."))
+        return 3
+
+    # Success report.
+    print(_build_summary_box(result))
+    print(_green(f"  ✓ Wrote {result.config_path.name} "
+                 f"({result.config_path.stat().st_size} bytes)"))
+    print(_green(f"  ✓ Wrote {result.plan_path.name} (decision log)"))
+    print(_green(f"  ✓ Scaffolded {result.efi_dir}/OC/{{ACPI,Drivers,Kexts,Tools}}/"))
+
+    if result.warnings:
+        print(_amber(f"\n  ⚠ {len(result.warnings)} warning(s):"))
+        for w in result.warnings:
+            root = _dim(" [needs root]") if w.get("needs_root") else ""
+            print(_amber(f"    {w.get('field','?')}: {w.get('reason','?')}{root}"))
+
+    print(_dim(f"\n  Next: Phase 3 will download OpenCore + kexts into {result.efi_dir}/"))
+    return 0
+
+
+def _build_summary_box(result) -> str:
+    """Compact human-readable summary of the generated EFI."""
+    try:
+        plan = json.loads(result.plan_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return ""
+    meta = plan.get("plan_metadata", {})
+    hw = meta.get("hardware_summary", {})
+    smbios = plan.get("smbios", {})
+    boot_args = plan.get("boot_args", {})
+
+    lines = [
+        "",
+        _bold(_violet("  HACKINSTALL") + _dim(f"  EFI generation · {meta.get('timestamp','?')}")),
+        _dim("  " + "─" * 62),
+        f"  {_bold('TARGET')}  macOS {meta.get('macos_target','?')}  ·  "
+        f"OpenCore {meta.get('opencore_version','?')}",
+        f"  {_bold('CPU')}     {hw.get('cpu','?')} ({hw.get('cpu_codename','?')})",
+        f"  {_bold('GPU')}     {', '.join(hw.get('gpus', []) or ['?'])}",
+        f"  {_bold('SMBIOS')}  {smbios.get('system_product_name','?')}  "
+        + _dim(f"(serial {smbios.get('system_serial','?')[:4]}…)"),
+        f"  {_bold('BOOT')}    {boot_args.get(boot_args.get('active', 'debug'), '-v')}",
+        f"  {_bold('KEXTS')}   {result.kext_count} kext(s)  ·  "
+        f"{_bold('SSDTs')} {result.ssdt_count} ssdt(s)",
+        _dim("  " + "─" * 62),
+    ]
+    return "\n".join(lines)
+
+
+def cmd_gui(_: argparse.Namespace) -> int:
+    """Launch the Flet GUI."""
+    try:
+        from .gui import run as run_gui
+    except ImportError as exc:
+        print(_red(f"✗ GUI not available: {exc}"), file=sys.stderr)
+        print(_dim("    Install with: pip install flet"), file=sys.stderr)
+        return 2
+    run_gui()
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="hackinstall",
-        description="HackInstall Phase 1 — deep hardware scanner for macOS-on-PC setup.",
+        description="HackInstall — one-click macOS-on-PC. Phase 1: scan. Phase 2: generate EFI.",
     )
     p.add_argument("--version", action="version", version=f"hackinstall {__version__}")
     sub = p.add_subparsers(dest="command")
@@ -214,8 +318,24 @@ def build_parser() -> argparse.ArgumentParser:
                    help="Show warning details and tracebacks on failure")
     s.set_defaults(func=cmd_scan)
 
+    g = sub.add_parser("generate",
+                       help="Generate an OpenCore EFI from a hardware_profile.json")
+    g.add_argument("profile", metavar="PROFILE",
+                   help="Path to hardware_profile.json (from `hackinstall scan`)")
+    g.add_argument("-o", "--output", metavar="DIR", default="efi_output",
+                   help="Output directory for config.plist + EFI/ (default: efi_output)")
+    g.add_argument("--macos", default="auto",
+                   choices=["auto", "ventura", "sonoma", "sequoia"],
+                   help="macOS target version (default: auto-detect from CPU)")
+    g.add_argument("-v", "--verbose", action="store_true",
+                   help="Show tracebacks on failure")
+    g.set_defaults(func=cmd_generate)
+
     sch = sub.add_parser("schema", help="Print the hardware_profile.json schema doc")
     sch.set_defaults(func=cmd_schema)
+
+    ui = sub.add_parser("gui", help="Launch the graphical interface")
+    ui.set_defaults(func=cmd_gui)
     return p
 
 

@@ -24,7 +24,6 @@
     "10ec:1168": { "codec": "ALC1220",             "layout_id": 1 },
     "10ec:1220": { "codec": "ALC1220",             "layout_id": 1 },
     "10ec:1221": { "codec": "ALC1220 (Alt)",       "layout_id": 7 },
-    "10ec:0000": { "codec": "ALC4080/ALC1220",     "layout_id": 11 },
     "1106:4393":  { "codec": "VIA VT2021",         "layout_id": 5 },
     "1102:000b":  { "codec": "Creative CA0132",    "layout_id": 2 }
   }

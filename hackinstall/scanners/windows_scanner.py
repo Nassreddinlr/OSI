@@ -69,3 +69,28 @@ class WindowsScanner(BaseScanner):
 
     def _scan_display_ports(self) -> dict:
         raise NotImplementedError(self._TODO)
+
+    # Deep-scan sections (Phase 1.5).
+    def _scan_all_pci(self) -> list | dict:
+        raise NotImplementedError(self._TODO)
+
+    def _scan_usb_devices(self) -> list | dict:
+        raise NotImplementedError(self._TODO)
+
+    def _scan_battery(self) -> dict:
+        raise NotImplementedError(self._TODO)
+
+    def _scan_boot_info(self) -> dict:
+        raise NotImplementedError(self._TODO)
+
+    def _scan_network_macs(self) -> dict:
+        raise NotImplementedError(self._TODO)
+
+    def _scan_tpm(self) -> dict:
+        raise NotImplementedError(self._TODO)
+
+    def _scan_camera(self) -> dict:
+        raise NotImplementedError(self._TODO)
+
+    def _scan_cpu_caches(self) -> dict:
+        raise NotImplementedError(self._TODO)

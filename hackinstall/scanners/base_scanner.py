@@ -40,7 +40,8 @@ class BaseScanner(ABC):
         """Run the full hardware scan and return a normalized profile dict."""
         self.warnings = []
         self.used_root = False
-        self.tool_versions = {}
+        # NOTE: do NOT reset self.tool_versions here — the concrete scanner's
+        # __init__ populates it once and the values remain valid across scans.
 
         sections: list[tuple[str, Callable[[], dict]]] = [
             ("cpu", self._scan_cpu),
@@ -55,6 +56,15 @@ class BaseScanner(ABC):
             ("input_devices", self._scan_input_devices),
             ("nvram", self._scan_nvram),
             ("display_ports", self._scan_display_ports),
+            # ── Deep-scan sections (Phase 1.5) ──────────────────────
+            ("all_pci", self._scan_all_pci),
+            ("usb_devices", self._scan_usb_devices),
+            ("battery", self._scan_battery),
+            ("boot_info", self._scan_boot_info),
+            ("network_macs", self._scan_network_macs),
+            ("tpm", self._scan_tpm),
+            ("camera", self._scan_camera),
+            ("cpu_caches", self._scan_cpu_caches),
         ]
 
         profile: dict[str, Any] = {}
@@ -241,3 +251,20 @@ class BaseScanner(ABC):
     def _scan_nvram(self) -> dict: ...
     @abstractmethod
     def _scan_display_ports(self) -> dict: ...
+    # ── Deep-scan sections (Phase 1.5) ──────────────────────────────
+    @abstractmethod
+    def _scan_all_pci(self) -> list | dict: ...
+    @abstractmethod
+    def _scan_usb_devices(self) -> list | dict: ...
+    @abstractmethod
+    def _scan_battery(self) -> dict: ...
+    @abstractmethod
+    def _scan_boot_info(self) -> dict: ...
+    @abstractmethod
+    def _scan_network_macs(self) -> dict: ...
+    @abstractmethod
+    def _scan_tpm(self) -> dict: ...
+    @abstractmethod
+    def _scan_camera(self) -> dict: ...
+    @abstractmethod
+    def _scan_cpu_caches(self) -> dict: ...

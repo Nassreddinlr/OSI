@@ -1,0 +1,5 @@
+# Expected ACPI files (download by Phase 3):
+# SSDT-PLUG.aml  — Defines CPU power management (plugin-type=1)
+# SSDT-EC-USBX.aml  — Fake Embedded Controller + USB power properties
+# SSDT-GPIO.aml  — GPIO controller for PS/2 trackpad/VoodooI2C
+# SSDT-PNLF.aml  — Backlight control for laptop panels

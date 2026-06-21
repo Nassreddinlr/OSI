@@ -16,6 +16,15 @@
       "smep",
       "vmx"
     ],
+    "stepping": 3,
+    "cpu_family": "6",
+    "microcode": "0xf0",
+    "max_ext_freq_ghz": null,
+    "architecture": "x86_64",
+    "byte_order": "Little Endian",
+    "l1d_cache": "64 KiB (2 instances)",
+    "l2_cache": "512 KiB (2 instances)",
+    "l3_cache": "3 MiB (1 instance)",
     "codename": "Skylake",
     "microarch": "skylake",
     "generation": 6,
@@ -26,10 +35,17 @@
   "gpu": [
     {
       "name": "Skylake-U GT2 [HD Graphics 520]",
-      "vendor": "Intel Corporation",
+      "vendor": "Intel",
       "pci_id": "8086:1916",
+      "device_id": "0x1916",
+      "revision": "07",
       "class": "VGA compatible controller",
+      "class_id": "0300",
       "slot": "00:02.0",
+      "subvendor": "Dell [1028]",
+      "is_integrated": true,
+      "is_discrete": false,
+      "vram_mb": null,
       "kext": "WhateverGreen.kext",
       "macos_support": "dropped",
       "needs_patch": null,
@@ -47,7 +63,7 @@
   "ethernet": [
     {
       "name": "Ethernet Connection I219-LM",
-      "vendor": "Intel Corporation",
+      "vendor": "Intel",
       "pci_id": "8086:156f",
       "slot": "00:1f.6",
       "kext": "IntelMausi.kext",
@@ -58,7 +74,7 @@
   "usb_controllers": [
     {
       "name": "Sunrise Point-LP USB 3.0 xHCI Controller",
-      "vendor": "Intel Corporation",
+      "vendor": "Intel",
       "pci_id": "8086:9d2f",
       "slot": "00:14.0",
       "needs_usb_map": true
@@ -67,9 +83,12 @@
   "wireless": {
     "wifi_chip": "Wireless 8260",
     "wifi_pci_id": "8086:24f3",
-    "wifi_vendor": "Intel Corporation",
+    "wifi_vendor": "Intel",
+    "wifi_support": "partial",
+    "wifi_kext": "AirportItlwm.kext",
     "bluetooth_chip": null,
     "bt_usb_id": null,
+    "bt_kext": null,
     "airdrop_support": false
   },
   "motherboard": {
@@ -103,8 +122,8 @@
   "input_devices": {
     "keyboard_bus": "USB",
     "mouse_bus": "USB",
-    "ps2_present": true,
-    "note": "PS/2 presence requires VoodooPS2.kext"
+    "ps2_present": false,
+    "note": null
   },
   "nvram": {
     "native_nvram": null,
@@ -123,9 +142,13 @@
     "host_release": "#22-Ubuntu SMP PREEMPT_DYNAMIC Mon May 25 15:54:34 UTC 2026",
     "host_machine": "x86_64",
     "scanner_version": "1.0.0-phase1",
-    "timestamp": "2026-06-20T20:55:41Z",
+    "timestamp": "2026-06-21T17:50:11Z",
     "used_root": false,
-    "tool_versions": {},
+    "tool_versions": {
+      "lspci": "lspci version 3.14.0",
+      "lsblk": "lsblk from util-linux 2.41.3",
+      "dmidecode": "3.6"
+    },
     "warning_count": 1
   },
   "warnings": [

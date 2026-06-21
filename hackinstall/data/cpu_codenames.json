@@ -45,13 +45,14 @@
     "ryzen 7 1":    { "codename": "Zen 1",  "microarch": "zen1",   "amd_zen": 1, "macos_support": "full",    "has_igpu": false },
     "ryzen threadripper 1": { "codename": "Zen 1", "microarch": "zen1", "amd_zen": 1, "macos_support": "full", "has_igpu": false },
 
-    "ryzen 3 2":    { "codename": "Zen 2",  "microarch": "zen2",   "amd_zen": 2, "macos_support": "full",    "has_igpu": false },
-    "ryzen 5 2":    { "codename": "Zen 2",  "microarch": "zen2",   "amd_zen": 2, "macos_support": "full",    "has_igpu": false },
-    "ryzen 7 2":    { "codename": "Zen 2",  "microarch": "zen2",   "amd_zen": 2, "macos_support": "full",    "has_igpu": false },
-    "ryzen 9 3":    { "codename": "Zen 2",  "microarch": "zen2",   "amd_zen": 2, "macos_support": "full",    "has_igpu": false },
+    "ryzen 3 2":    { "codename": "Zen+",   "microarch": "zenplus", "amd_zen": 2, "macos_support": "full",    "has_igpu": false },
+    "ryzen 5 2":    { "codename": "Zen+",   "microarch": "zenplus", "amd_zen": 2, "macos_support": "full",    "has_igpu": false },
+    "ryzen 7 2":    { "codename": "Zen+",   "microarch": "zenplus", "amd_zen": 2, "macos_support": "full",    "has_igpu": false },
 
     "ryzen 3 3":    { "codename": "Zen 2",  "microarch": "zen2",   "amd_zen": 2, "macos_support": "full",    "has_igpu": false },
     "ryzen 5 3":    { "codename": "Zen 2",  "microarch": "zen2",   "amd_zen": 2, "macos_support": "full",    "has_igpu": false },
+    "ryzen 7 3":    { "codename": "Zen 2",  "microarch": "zen2",   "amd_zen": 2, "macos_support": "full",    "has_igpu": false },
+    "ryzen 9 3":    { "codename": "Zen 2",  "microarch": "zen2",   "amd_zen": 2, "macos_support": "full",    "has_igpu": false },
     "ryzen 5 5":    { "codename": "Zen 3",  "microarch": "zen3",   "amd_zen": 3, "macos_support": "full",    "has_igpu": false },
     "ryzen 7 5":    { "codename": "Zen 3",  "microarch": "zen3",   "amd_zen": 3, "macos_support": "full",    "has_igpu": false },
     "ryzen 9 5":    { "codename": "Zen 3",  "microarch": "zen3",   "amd_zen": 3, "macos_support": "full",    "has_igpu": false },
@@ -60,7 +61,7 @@
     "ryzen 9 7":    { "codename": "Zen 4",  "microarch": "zen4",   "amd_zen": 4, "macos_support": "partial", "has_igpu": true,  "note": "Ryzen 7000 has RDNA2 iGPU, no macOS support" },
     "ryzen 5 9":    { "codename": "Zen 5",  "microarch": "zen5",   "amd_zen": 5, "macos_support": "none",    "has_igpu": true },
     "ryzen 7 9":    { "codename": "Zen 5",  "microarch": "zen5",   "amd_zen": 5, "macos_support": "none",    "has_igpu": true },
-    "ryzen 9 9":    { "codename": "Zen 5",  "microarch": "zen5",   "amd_zen":  5, "macos_support": "none",   "has_igpu": true },
+    "ryzen 9 9":    { "codename": "Zen 5",  "microarch": "zen5",   "amd_zen": 5, "macos_support": "none",    "has_igpu": true },
     "ryzen threadripper": { "codename": "Threadripper", "microarch": "various", "amd_zen": null, "macos_support": "partial", "has_igpu": false },
     "athlon":       { "codename": "Athlon",  "microarch": "various", "amd_zen": null, "macos_support": "none",    "has_igpu": true },
     "a-series":     { "codename": "Bristol Ridge", "microarch": "various", "amd_zen": null, "macos_support": "none", "has_igpu": true }
